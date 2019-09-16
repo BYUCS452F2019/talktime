@@ -7,12 +7,11 @@ The fastest way to become conversationally fluent in a foreign language is to sp
 # Aspects
 ## Business
 
-
-What is the business hting going on here?
+Our business logic will be the safe storage of user's time preferences, as well as fast searching and sorting of available times across different langauge speakers.  We plan to make recommendations to users on who they can speak with, based on their availability.  When users connect, we want to remember which users are in touch, and how it went.  Talktime will take care of the complexity of trying to fit schedules from different timezones together.
 
 ## Legal
 
-What is the legal thing going on here?
+Although we store account information, we keep personal data to a minimum.  We will base accounts off of email addresses and passwords, but will not ask users for birth dates, social security numbers, or other sensitive information.  In the future, we may incorporate a paid tier of our service, for which we will most likely rely on a third party such as Stripe to handle payment processing.
 
 ## Technical
 
