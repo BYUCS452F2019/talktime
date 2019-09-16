@@ -4,7 +4,7 @@ Learn a language by talking with other people, anywhere, anytime.
 # Motivation
 The fastest way to become conversationally fluent in a foreign language is to speak it with natives.  Many current language   apps in the market can connect you to native speakers, but leave it to you to coordinate across time zones and busy schedules.  Register with Talktime and leave the scheduling to us, while you focus on practicing your language!
 
-We're hiring!  Looking for team of 3-4 people.
+We're hiring!  Looking for team of 3-4 people with experience in: git, React, PostgreSQL, and NodeJS.
 
 # Aspects
 ## Business
