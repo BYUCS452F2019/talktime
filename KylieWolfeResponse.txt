@@ -1,0 +1,11 @@
+Kylie Wolfe - Option II - Response to talktime pitch
+
+Hello!
+
+I am interested in this project because I have recently been trying to teach myself Japanese. Learning a language on one's own is difficult, and this seems like it would be a good resource for myself and other solo learners.
+
+I would like to work mostly with the relational database, though I also have some experience with React if we need help with the UI. 
+
+This could have some good business potential, though I worry it's not quite different enough from competetors to make it as a buisness (see italki). I am also concerned about where we will get the native speakers. Would we pay native speakers? Have them give one meeting in their language to unlock a meeting in their target one?
+
+Legally it seems like good consideration has gone into what data we will need to collect. Technically, I like that the UI is using React. React is clean and compartmentalized. I don't really have any experience with the other technologies being used, so I can't really comment on them.
