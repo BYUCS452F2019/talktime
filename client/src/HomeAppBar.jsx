@@ -178,7 +178,7 @@ export default function PrimarySearchAppBar() {
           <Avatar styles={{ margin: 20 }}>Y</Avatar>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
-            <IconButton color="inherit">
+            <IconButton href="/home/search" color="inherit">
               <Badge color="secondary">
                 <Tooltip title="Find someone to talk to">
                   <PublicIcon />

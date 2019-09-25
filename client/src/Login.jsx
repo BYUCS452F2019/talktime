@@ -46,6 +46,10 @@ const useStyles = makeStyles(theme => ({
 function Login () {
     const classes = useStyles();
 
+  /*login = () => {
+    // do what Brett wants
+  }*/
+
     return (
     <Grid container component="main" className={classes.root}>
       <CssBaseline />
