@@ -14,7 +14,6 @@
 ** Foreign Key user_id references users
 ** Foreign Key other_user_id references users
 
-** languages_known (user_id, language_id)
+* languages_known (user_id, language_id)
 ** Foreign Key user_id references users
 ** Foreign Key language_id references languages
-
