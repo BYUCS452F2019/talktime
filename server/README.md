@@ -1,30 +1,24 @@
-# Project Schema
+# Setting up the server locally
 
-* users (user_id, user_name, password_hash, pref_timezone)
+If you do not have a virtual environment, you will need to set one up. This makes sure that all of our installed dependencies stay the same across everyone's machine.
 
-This table represents the human user that is registered with the service.  It is referenced by server tables including languages_wanted, availability, requests, languages_known.
+To set up a virtual machine:
 
-* languages_wanted (user_id, language_id)
-  *	Foreign Key user_id references users
-  * Foreign Key language_id references languages
-  
-This table represents the relationship between a user and the languages that they want to learn.  It references both the languages and users tables.
+1. `python -m venv venv`
+2. `source venv/bin/activate`
 
-* languages (language_id, language_name)
+You will now be in the virtual environment. Now run:
 
-This table represents the different languages spoken around the world.  It is referenced by: languages_wanted and languages_known.
+`pip install -r requirements.txt`
 
-* availablity (user_id, day_of_week, from_time, to_time)
-  * Foreign Key user_id references users
-  
-This table represents a user's availability to chat with someone else.  It references a user using their user_id.
+You will now have all the dependencies installed in your virtual environment. The last thing you need to do is set up your Flask environment by running:
 
-*	requests (request_id, user_id, other_user_id, from_time, to_time, req_accepted, req_confirmed)
-    * Foreign Key user_id references users
-    * Foreign Key other_user_id references users
-    
-This table represents a request from one user to another user about chatting.  It referneces both users and availability tables.
+`export FLASK_APP=app.py`
 
-* languages_known (user_id, language_id)
-  * Foreign Key user_id references users
-  * Foreign Key language_id references languages
+You might consider putting the above export statement in your `.bashrc` file so that you don't have to do it everytime you want to run the server.
+
+To run the app, just do:
+
+`flask run`
+
+Go to http://localhost:5000 and you will see the app running!
