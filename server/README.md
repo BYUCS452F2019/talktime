@@ -31,4 +31,4 @@ This table represents a request from one user to another user about chatting.  I
 
 This table represents the relationship between a user and the language(s) that they know.  It references both the languages and users tables.
 
-Evidence of normalization: We included languages and users to abstract human users and possible languages in order to avoid confusion, make use of foreign keys, and reduce redundancy and dependency.  By building these constraints into our system, we are pre-emptively catching bugs concerning our data relationships.
+Evidence of normalization: We included languages and users to abstract human users and possible languages in order to avoid confusion, make use of foreign keys, and reduce redundancy.  By building these constraints into our system, we are pre-emptively catching bugs concerning our data relationships.
