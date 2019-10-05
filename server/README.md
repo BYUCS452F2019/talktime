@@ -14,6 +14,10 @@ If you're setting this up for the first time, run the following command:
 
 This will create a folder called `venv` that contains your virtual environment.
 
+Now run the following to enter the virtual environment:
+
+`source venv/bin/activate`
+
 ### Installing dependencies
 
 While inside your virtual environment, run the following command to install all dependencies required for this project:
