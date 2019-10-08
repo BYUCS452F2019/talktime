@@ -11,3 +11,5 @@ migrate = Migrate(app, db)
 @app.route('/')
 def index():
   return 'Welcome to talktime!'
+
+import server.models

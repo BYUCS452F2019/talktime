@@ -5,10 +5,10 @@ class LanguagesKnown(db.Model):
   __tablename__ = 'languages_known'
   id = db.Column(db.Integer, primary_key=True)
   user_id = db.Column(db.Integer, db.ForeignKey(
-      'users'
+      'users.id'
   ), nullable=False)
   language_id = db.Column(db.Integer, db.ForeignKey(
-      'languages'
+      'languages.id'
   ), nullable=False)
 
   # Relationships

@@ -54,6 +54,18 @@ You will also need to export an environment variable called `DATABASE_URL` so th
 
 `export DATABASE_URL="postgresql://localhost/talktime`
 
+Next you will need to tell Flask to populate your database with the models.
+
+Make sure you `cd` into the `server` folder first.
+
+Then run the following commands:
+
+1. `flask db init`
+2. `flask db migrate -m "some message"`
+3. `flask db upgrade`
+
+Check your Postgres connection with some client (I like SQLectron) and you should see them in there!
+
 ## Steps you should do every time you are developing
 
 ### Entering the virtual environment

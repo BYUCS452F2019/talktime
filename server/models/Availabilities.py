@@ -7,7 +7,7 @@ class Availabilities(db.Model):
   user_id = db.Column(db.Integer, db.ForeignKey(
       'users.id'
   ), nullable=False)
-  day_of_week = db.Column(db.Integer(1), nullable=False)
+  day_of_week = db.Column(db.Integer, nullable=False)
   from_time = db.Column(db.Integer, nullable=False)
   to_time = db.Column(db.Integer, nullable=False)
 
