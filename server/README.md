@@ -50,9 +50,10 @@ To create the talktime database, run
 
 Check out http://www.postgresqltutorial.com/psql-commands/ for some practical commands you can use in the PostgreSQL shell.
 
-You will also need to export an environment variable called `DATABASE_URL` so that Flask can connect to the database. Run the following command:
+You will also need to export an environment variable called `DATABASE_URL` so that Flask can connect to the database. Run the following commands:
 
-`export DATABASE_URL="postgresql://localhost/talktime`
+`export DATABASE_URL="postgres://localhost/talktime"`
+`export FLASK_APP=app.py`
 
 Next you will need to tell Flask to populate your database with the models.
 
