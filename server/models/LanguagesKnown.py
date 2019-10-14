@@ -12,8 +12,8 @@ class LanguagesKnown(db.Model):
   ), nullable=False)
 
   # Relationships
-  user = db.relationship('users', backref='languages_known')
-  language = db.relationship('languages', backref='languages_known')
+  user = db.relationship('Users', backref='languages_known')
+  language = db.relationship('Languages', backref='languages_known')
 
   def __repr__(self):
     return '<LanguagesKnown -> id: {}, user_id: {}, language_id: {}'.format(
