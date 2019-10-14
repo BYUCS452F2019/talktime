@@ -4,7 +4,7 @@ from server.app import api, db
 NS = api.namespace('sample',
   description="Sample route")
   
-@NS.route('/')
+@NS.route('')
 class Sample(Resource):
   def get(self):
     a = {'a': 1, 'b': 2}
