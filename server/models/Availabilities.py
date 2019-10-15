@@ -12,7 +12,7 @@ class Availabilities(db.Model):
   to_time = db.Column(db.Integer, nullable=False)
 
   # Relationships
-  user = db.relationship('users', backref='availabilities')
+  user = db.relationship('Users', backref='availabilities')
 
   def __repr__(self):
     return '<Availabilities -> id: {}, user_id: {}, day_of_week: {}, from_time: {}, to_time: {}'.format(
