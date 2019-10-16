@@ -8,13 +8,14 @@ from server.api import get_token
 NS = api.namespace("login", description="Login an existing user")
 
 token = api.model('Token', {
-  'token': fields.String
+    'token': fields.String
 })
 
 form = api.model('Login form', {
-  'user_name': fields.String,
-  'password': fields.String
+    'user_name': fields.String,
+    'password': fields.String
 })
+
 
 @NS.route("")
 class Login(Resource):
@@ -24,6 +25,17 @@ class Login(Resource):
   def post(self):
     '''Post fields ["user_name", "password"] to log in an existing user'''
     data = request.get_json()
+    if data == None:
+      data = request.form
+
+    keys = ['user_name', 'password']
+    for key in keys:
+      if key not in data:
+        return {'message': 'Missing required param: {}'.format(key)}
+
+    for key in data.keys():
+      if key not in keys:
+        return {'message': 'Invalid param: {}'.format(key)}
     user_name = data["user_name"]
     password = data["password"]
     user = Users.authenticate(user_name=user_name, password=password)
