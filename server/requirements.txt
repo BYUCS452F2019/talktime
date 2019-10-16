@@ -16,7 +16,7 @@ Jinja2==2.10.1
 jsonschema==3.0.2
 Mako==1.1.0
 MarkupSafe==1.1.1
-psycopg2==2.8.3
+psycopg2-binary==2.8.3
 pycparser==2.19
 PyJWT==1.7.1
 pyrsistent==0.15.4
