@@ -8,7 +8,9 @@ from server.api import get_token
 NS = api.namespace("login", description="Login an existing user")
 
 token = api.model('Token', {
-    'token': fields.String
+    'token': fields.String,
+    'message': fields.String,
+    'authenticated': fields.Boolean
 })
 
 form = api.model('Login form', {
@@ -31,7 +33,7 @@ class Login(Resource):
     keys = ['user_name', 'password']
     for key in keys:
       if key not in data:
-        return {'message': 'Missing required param: {}'.format(key)}
+        return {'message': 'Missing required param: {}'.format(key), 'authenticated': False}
 
     for key in data.keys():
       if key not in keys:
@@ -41,6 +43,6 @@ class Login(Resource):
     user = Users.authenticate(user_name=user_name, password=password)
 
     if not user:
-      return {"message": "Invalid credentials"}
+      return {"message": "Invalid credentials", 'authenticated': False}
 
-    return get_token(user.email)
+    return get_token(user_name)
