@@ -53,4 +53,4 @@ def get_token(user_name):
       },
       app.config["SECRET_KEY"],
   )
-  return {"token": token.decode("UTF-8")}
+  return {"token": token.decode("UTF-8"), 'authenticated': True}

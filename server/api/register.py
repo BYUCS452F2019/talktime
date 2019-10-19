@@ -8,7 +8,9 @@ NS = api.namespace('register',
                    description='Endpoint for registering a new user.')
 
 token = api.model('Token', {
-    'token': fields.String
+    'token': fields.String,
+    'message': fields.String,
+    'authenticated': fields.Boolean
 })
 
 form_input = api.model('Register form', {
@@ -30,11 +32,11 @@ class Register(Resource):
     keys = ['user_name', 'email', 'password']
     for key in keys:
       if key not in data:
-        return {'message': 'Request missing field: {}'.format(key)}
+        return {'message': 'Request missing field: {}'.format(key), 'authenticated': False}
 
     for key in data.keys():
       if key not in keys:
-        return {'message': 'Invalid key: {}'.format(key)}
+        return {'message': 'Invalid key: {}'.format(key), 'authenticated': False}
 
     user_name = data['user_name']
     email = data['email']
