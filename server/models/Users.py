@@ -10,10 +10,11 @@ class Users(db.Model):
   password_hash = db.Column(db.String, nullable=False)
   pref_timezone = db.Column(db.String, nullable=True)
 
-  def __init__(self, user_name, email, password):
+  def __init__(self, user_name, email, password, pref_timezone):
     self.user_name = user_name
     self.email = email
     self.password_hash = generate_password_hash(password, method='sha256')
+    self.pref_timezone = pref_timezone
 
   @classmethod
   def authenticate(cls, **kwargs):

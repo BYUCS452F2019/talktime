@@ -16,7 +16,8 @@ token = api.model('Token', {
 form_input = api.model('Register form', {
     'user_name': fields.String,
     'email': fields.String,
-    'password': fields.String
+    'password': fields.String,
+    'pref_timezone': fields.String
 })
 
 
@@ -29,7 +30,7 @@ class Register(Resource):
     if data == None:
       data = request.form
 
-    keys = ['user_name', 'email', 'password']
+    keys = ['user_name', 'email', 'password', 'pref_timezone']
     for key in keys:
       if key not in data:
         return {'message': 'Request missing field: {}'.format(key), 'authenticated': False}
@@ -41,7 +42,8 @@ class Register(Resource):
     user_name = data['user_name']
     email = data['email']
     password = data['password']
-    user = Users(user_name, email, password)
+    pref_timezone = data['pref_timezone']
+    user = Users(user_name, email, password, pref_timezone)
     db.session.add(user)
     db.session.commit()
     return get_token(user_name)
