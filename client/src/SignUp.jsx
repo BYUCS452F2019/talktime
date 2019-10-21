@@ -14,6 +14,7 @@ import FormControl from '@material-ui/core/FormControl';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
+import { useHistory } from 'react-router-dom';
 import Container from '@material-ui/core/Container';
 
 const useStyles = makeStyles(theme => ({
@@ -58,11 +59,12 @@ const MenuProps = {
 
 export default function SignUp() {
   const classes = useStyles();
+  const history = useHistory();
   const [languages, setLanguages] = React.useState([]);
   const [languageOptions, setLanguageOptions] = React.useState(["Placeholder1", "Placerholder2"]);
 
   useEffect(() => {
-    fetch("https://ab-language-app.herokuapp.com/api/languages")
+    fetch("api/get_languages")
       .then(payload => payload.json())
       .then(res => {
         setLanguageOptions(res.map(r => { return { id: r.id, name: r.name } }))
@@ -88,17 +90,27 @@ export default function SignUp() {
     let body = {
       user_name: document.getElementById("username").value,
       email: document.getElementById("email").value,
-      password: document.getElementById("password").value
+      password: document.getElementById("password").value,
+      pref_timezone: "none"
     }
-    console.log("body: " + JSON.stringify(body))
 
     fetch("/api/register", {
       method: "POST",
+      headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+      },
       body: JSON.stringify(body)
     })
-    .then(response => console.log(response))
+      .then(response => response.json())
+      .then(result => {
+        if (result.authenticated) {
+          history.push("/home")
+        } else {
+          alert("Registration unsuccessful")
+        }
+      })
   }
-
 
   return (
     <Container component="main" maxWidth="xs">
