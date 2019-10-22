@@ -1,18 +1,15 @@
 import React from 'react';
-import { Component } from 'react'
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Paper from '@material-ui/core/Paper';
-import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
+import { useHistory } from 'react-router-dom'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -45,6 +42,7 @@ const useStyles = makeStyles(theme => ({
 
 function Login () {
     const classes = useStyles();
+    const history = useHistory();
 
     let login = () => {
       let body ={
@@ -54,8 +52,19 @@ function Login () {
 
       fetch("/api/login", {
         method: "post",
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
         body: JSON.stringify(body)
-      }).then(response => console.log(response))
+      }).then(response => response.json())
+        .then(result => {
+          if (result.authenticated) {
+            history.push("/home")
+          } else {
+            alert("Login unsuccessful")
+          }
+        })
     }
 
     return (

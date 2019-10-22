@@ -65,7 +65,7 @@ export default function Settings() {
   const [languageOptions, setLanguageOptions] = React.useState(["Placeholder1", "Placerholder2"]);
 
   useEffect(() => {
-    fetch("https://ab-language-app.herokuapp.com/api/languages")
+    fetch("/api/get_languages")
       .then(payload => payload.json())
       .then(res => {
         setLanguageOptions(res.map(r => { return { id: r.id, name: r.name } }))
@@ -101,26 +101,14 @@ export default function Settings() {
           <br />
           <React.Fragment>
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  autoComplete="fname"
-                  name="firstName"
-                  variant="outlined"
-                  required
-                  fullWidth
-                  id="firstName"
-                  label="First Name"
-                  autoFocus
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12}>
                 <TextField
                   variant="outlined"
                   required
                   fullWidth
-                  id="lastName"
-                  label="Last Name"
-                  name="lastName"
+                  id="username"
+                  label="Username"
+                  name="username"
                   autoComplete="lname"
                 />
               </Grid>
