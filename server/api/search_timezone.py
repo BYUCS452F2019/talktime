@@ -11,7 +11,8 @@ from server.app import api, db
 from server.models.Users import Users
 from server.api import token_required
 
-NS = api.namespace("search_timezone", description="Query for users with same preferred timezone")
+NS = api.namespace(
+    "search_timezone", description="Query for users with same preferred timezone")
 
 username = api.model('username', {
     'username': fields.String
@@ -32,12 +33,12 @@ class SearchTimezone(Resource):
 
   @api.marshal_with(response)
   @token_required
-  def post(self, curr_user):
+  def get(self, curr_user):
 
     users = Users.query.filter_by(pref_timezone=curr_user.pref_timezone).all()
     u_list = []
     for user in users:
-      u_list.append({'username': user.username})
+      u_list.append({'username': user.user_name})
 
     res = {'usernames': u_list}
 
