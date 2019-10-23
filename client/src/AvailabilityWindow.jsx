@@ -31,17 +31,27 @@ class AvailabilityWindow extends Component {
   extract_timechunk = (col) => {
     let ret = []
     let chunk = []
-    for (let i = 1; i < col.length; i++) {
-      if (col[i] && !col[i - 1]) {
-        chunk.push(i * 60)
+    for (let i = 0; i < col.length; i++) {
+      if (col[i] && chunk.length == 0) {
+        chunk.push(i * 60 + this.start_minutes + this.offset_minutes)
+      } else if (!col[i] && chunk.length == 1) {
+        chunk.push(i * 60 + this.start_minutes + this.offset_minutes - 1)
+        ret.push(chunk)
+        chunk = []
       }
     }
+    if (chunk.length == 1) {
+      chunk.push(col.length * 60 + this.start_minutes + this.offset_minutes - 1)
+      ret.push(chunk)
+    }
+    return ret
   }
 
   update_availability = (cells) => {
     let get_column = (array, n) => array.slice(1).map(r => r[n])
     let by_day = [...Array(7).keys()].map(n => get_column(cells, n + 1))
     let available_times = by_day.map(this.extract_timechunk)
+    console.log("available times: " + available_times)
     // do fetch
   }
 
