@@ -20,7 +20,7 @@ form = api.model('availability form', {
     'to_time': fields.Integer
 })
 
-
+timezone_dict = {"BakerIsland":-720, "HowlandIsland":-720 }
 @NS.route('')
 class Register(Resource):
     @api.expect(form_input)
@@ -64,8 +64,17 @@ class Register(Resource):
                     to_time = 1440
                     availability = Availabilities(user_id, day_of_week2, from_time2, to_time2)
             # logic for shifting to the right (positive offset)
-            if to_time > 1440: # offset pushes end time into next day
+            elif to_time > 1440: # offset pushes end time into next day
                 to_time = to_time - 1440
+                day_of_week += 1
+                if from_time > 1440:
+                    from_time = from_time - 1440
+                else: # chunk of time is split between two days
+                    day_of_week2 = day_of_week - 1
+                    from_time2 = from_time
+                    to_time2 = 1440
+                    from_time = 0000
+                    availability = Availabilities(user_id, day_of_week2, from_time2, to_time2)
             # ----------------------------------------------------------
             availability = Availabilities(user_id, day_of_week, from_time, to_time)
             db.session.add(availability)
