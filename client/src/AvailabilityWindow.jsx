@@ -25,16 +25,20 @@ class AvailabilityWindow extends Component {
     super(props)
   }
 
+  update_availability = (cells) => {
+    console.log("update availability")
+  }
+
   render () {
     return (
       <div>
         <AppBar position="static">
           <Tabs value={0} variant="fullWidth">
-            <Tab label="My Meeting Times">
+            <Tab label="My Availability">
             </Tab>
           </Tabs>
         </AppBar> 
-        <AvailabilityTable />
+      <AvailabilityTable callback={this.update_availability}/>
       </div>
     );
   } 
