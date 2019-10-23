@@ -1,10 +1,12 @@
 import React from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
+import AvailabilityTable from './AvailabilityTable.jsx';
+import "react-table-drag-select/style.css";
 
 function TabContainer(props) {
   return (
@@ -18,29 +20,24 @@ TabContainer.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-const useStyles = makeStyles(theme => ({
-  root: {
-    flexGrow: 1,
-    backgroundColor: theme.palette.background.paper,
-  },
-}));
-
-export default function AvailabilityWindow() {
-  const classes = useStyles();
-  const [value, setValue] = React.useState(0);
-
-  function handleChange(event, newValue) {
-    setValue(newValue);
+class AvailabilityWindow extends Component {
+  constructor(props) {
+    super(props)
   }
 
-  return (
-    <div className={classes.root}>
-      <AppBar position="static">
-        <Tabs value={value} onChange={handleChange} variant="fullWidth">
-          <Tab label="My Meeting Times" />
-        </Tabs>
-      </AppBar>
-      
-    </div>
-  );
-}
+  render () {
+    return (
+      <div>
+        <AppBar position="static">
+          <Tabs value={0} variant="fullWidth">
+            <Tab label="My Meeting Times">
+            </Tab>
+          </Tabs>
+        </AppBar> 
+        <AvailabilityTable />
+      </div>
+    );
+  } 
+} 
+
+export default AvailabilityWindow;
