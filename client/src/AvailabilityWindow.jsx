@@ -23,10 +23,26 @@ TabContainer.propTypes = {
 class AvailabilityWindow extends Component {
   constructor(props) {
     super(props)
+
+    this.offset_minutes = (new Date()).getTimezoneOffset()
+    this.start_minutes = 60 * 8
+  }
+
+  extract_timechunk = (col) => {
+    let ret = []
+    let chunk = []
+    for (let i = 1; i < col.length; i++) {
+      if (col[i] && !col[i - 1]) {
+        chunk.push(i * 60)
+      }
+    }
   }
 
   update_availability = (cells) => {
-    console.log("update availability")
+    let get_column = (array, n) => array.slice(1).map(r => r[n])
+    let by_day = [...Array(7).keys()].map(n => get_column(cells, n + 1))
+    let available_times = by_day.map(this.extract_timechunk)
+    // do fetch
   }
 
   render () {
