@@ -48,9 +48,9 @@ class Register(Resource):
             # logic to convert from and to times to a universal time.
             # ----------------------------------------------------------
             timezone = curr_user.pref_timezone
-            offset = 0000 # get offset from reference by timezone
-            from_time += offset
-            to_time += offset
+            offset = timezone_dict[timezone] # get offset from reference by timezone
+            from_time -= offset
+            to_time -= offset
             # logic for shifting to left (ie negative offset)
             if from_time < 0000: # offset caused date to go backwards
                 from_time = 1440 + from_time
