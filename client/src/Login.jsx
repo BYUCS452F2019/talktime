@@ -60,6 +60,7 @@ function Login () {
       }).then(response => response.json())
         .then(result => {
           if (result.authenticated) {
+            localStorage.setItem("auth", result.token)
             history.push("/home")
           } else {
             alert("Login unsuccessful")
