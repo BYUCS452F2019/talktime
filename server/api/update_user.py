@@ -62,12 +62,9 @@ class UpdateUser(Resource):
     if (len(user_patch) == 0):
       return {'message': 'No changes Needed'}
 
-    # Get all users
-    users = Users.query.all()
-    # Check duplicates
-    for user in users:
-      if user.user_name == user_patch['user_name']:
-        return {'message': 'Username is taken'}
+    # Check duplicates using filter_by
+    if Users.query.filter_by(user_name=user_patch['user_name']).count() > 0:
+      return {'message': 'Username is taken'}
 
     # Updating the user object
     for key in user_patch.keys():
