@@ -7,8 +7,9 @@ from functools import wraps
 from flask import request
 import jwt
 from server.models.Users import Users
-from server.app import app
+from server.app import app, api
 from datetime import datetime, timedelta
+
 
 def token_required(func):
   '''Decorator to indicate that a user must be logged in to use the function'''
@@ -33,13 +34,12 @@ def token_required(func):
       data = jwt.decode(token, app.config["SECRET_KEY"])
       user = Users.query.filter_by(user_name=data["sub"]).first()
       if not user:
-        raise RuntimeError("User not found")
+        api.abort(400, "User not found")
       return func(args[0], user, **kwargs)
     except jwt.ExpiredSignatureError:
-      return expired_msg
+      api.abort(403, 'Expired JWT token')
     except jwt.InvalidTokenError as err:
-      print(err)
-      return invalid_msg
+      api.abort(403, 'Invalid token')
 
   return _verify
 
@@ -54,3 +54,13 @@ def get_token(user_name):
       app.config["SECRET_KEY"],
   )
   return {"token": token.decode("UTF-8"), 'authenticated': True}
+
+
+def verify_request(fields, data):
+  '''
+    Make sure that the given fields are 
+    all present in the data
+  '''
+  for f in fields:
+    if f not in data:
+      api.abort(401, 'Missing required param: {}'.format(f))
