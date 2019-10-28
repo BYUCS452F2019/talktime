@@ -25,8 +25,8 @@ timezone_dict = {"BakerIsland":-720, "HowlandIsland":-720 } # add all desired ti
 class AddAvailability(Resource):
     @api.expect(form)
     @api.marshal_with(success)
-    #@token_required
-    def post(self):
+    @token_required
+    def post(self, curr_user):
         try:
             data = request.get_json()
             if data == None:
@@ -47,7 +47,7 @@ class AddAvailability(Resource):
             to_time = data['to_time']
             # logic to convert from and to times to a universal time.
             # ----------------------------------------------------------
-            timezone = "BakerIsland"
+            timezone = curr_user.pref_timezone
             offset = timezone_dict[timezone] # get offset from reference by timezone
             from_time -= offset
             to_time -= offset
@@ -66,9 +66,9 @@ class AddAvailability(Resource):
                     from_time2 = 0000
                     to_time2 = to_time
                     to_time = 1440
-                    print(day_of_week2)
-                    print(from_time2)
-                    print(to_time2)
+                    #print(day_of_week2)
+                    #print(from_time2)
+                    #print(to_time2)
                     availability = Availabilities(user_id, day_of_week2, from_time2, to_time2)
             # logic for shifting to the right (positive offset)
             elif to_time > 1440: # offset pushes end time into next day
@@ -90,9 +90,9 @@ class AddAvailability(Resource):
                     print(to_time2)
                     availability = Availabilities(user_id, day_of_week2, from_time2, to_time2)
             # ----------------------------------------------------------
-            print(day_of_week)
-            print(from_time)
-            print(to_time)
+            #print(day_of_week)
+            #print(from_time)
+            #print(to_time)
             availability = Availabilities(user_id, day_of_week, from_time, to_time)
             db.session.add(availability)
             db.session.commit()
