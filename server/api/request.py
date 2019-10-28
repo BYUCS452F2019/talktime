@@ -7,7 +7,7 @@ from server.models.Requests import Requests
 from server.models.Users import Users
 
 NS = api.namespace(
-    'make_request', description="Make a request to chat with someone")
+    'request', description="Make a request to chat with someone")
 
 request_form = api.model('Request form', {
     'partner_id': fields.Integer,
@@ -21,7 +21,11 @@ success_resp = api.model('Successful request', {
 
 
 @NS.route('')
-class MakeRequest(Resource):
+class Request(Resource):
+  @token_required
+  def get(self, user):
+    return 'list of requests'
+    
   @NS.expect(request_form)
   @NS.marshal_with(success_resp)
   @token_required
