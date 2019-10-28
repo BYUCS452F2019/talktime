@@ -38,8 +38,8 @@ class SearchAvailabilities(Resource):
     '''Contains post method for logging in'''
     @api.marshal_with(response)
     @api.expect(req)
-    #@token_required
-    def post(self):
+    @token_required
+    def post(self, curr_user):
         #print("HERE")
         data = request.get_json()
         if data == None:
@@ -56,11 +56,11 @@ class SearchAvailabilities(Resource):
         req_from_time = data['from_time']
         req_to_time = data['to_time']
         availabilities = Availabilities.query.all()
-        print(availabilities)
-        if availabilities == None:
-            print("ITS NONE")
-        if len(availabilities) < 1:
-            print("ITS EMPTY")
+#         print(availabilities)
+#         if availabilities == None:
+#             print("ITS NONE")
+#         if len(availabilities) < 1:
+#             print("ITS EMPTY")
         valid_availabilities = []
         for availability in availabilities:
             from_time = availability.from_time
@@ -68,7 +68,7 @@ class SearchAvailabilities(Resource):
             day_of_week = availability.day_of_week
 
             # shift from_time and to_time based on user pref_timezone
-            timezone = "BakerIsland"#curr_user.pref_timezone
+            timezone = #curr_user.pref_timezone
             offset = timezone_dict[timezone]
             from_time += offset
             to_time += offset
