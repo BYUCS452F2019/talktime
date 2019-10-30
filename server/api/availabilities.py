@@ -14,7 +14,7 @@ success = api.model('Success', {
 })
 
 availability = api.model('Availability', {
-    'id': fields.String,
+    'id': fields.Integer,
     'user_id': fields.Integer,
     'day_of_week': fields.Integer,
     'from_time': fields.Integer,
@@ -22,7 +22,7 @@ availability = api.model('Availability', {
 })
 
 all_availabilities = api.model('availabilities', {
-    'availabilities': fields.List(availability)
+    'availabilities': fields.List(fields.Nested(availability))
 })
 
 form = api.model('availability form', {
@@ -118,7 +118,7 @@ class AddAvailability(Resource):
     @token_required
     def get(self, curr_user):
         try:
-            availabilities = Availability.query.filter_by(user_id=curr_user.id)
+            availabilities = Availabilities.query.filter_by(user_id=curr_user.id)
             valid_availabilities = []
             for availability in availabilities:
                 from_time = availability.from_time
@@ -126,7 +126,7 @@ class AddAvailability(Resource):
                 day_of_week = availability.day_of_week
 
                 # shift from_time and to_time based on user pref_timezone
-                timezone = #curr_user.pref_timezone
+                timezone = curr_user.pref_timezone
                 offset = timezone_dict[timezone]
                 from_time += offset
                 to_time += offset
