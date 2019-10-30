@@ -69,7 +69,7 @@ class SearchAvailabilities(Resource):
             day_of_week = availability.day_of_week
 
             # shift from_time and to_time based on user pref_timezone
-            timezone = #curr_user.pref_timezone
+            timezone = curr_user.pref_timezone
             offset = timezone_dict[timezone]
             from_time += offset
             to_time += offset
