@@ -32,7 +32,8 @@ response = api.model('availabilities', {
     'availabilities': fields.List(fields.Nested(availabilities))
 })
 
-timezone_dict = {"BakerIsland":-720, "HowlandIsland":-720 }
+timezone_dict = {"BakerIsland":-720, "Samoa":-660, "French Polynesia":-600, "Anchorage":-540, "Los Angeles":-480, "Denver":-420, "Dallis":-360, "New York":-300, "Virgin Islands":-240, "Rio":-180, "South Sandwish Islands":-120, "Cabo Verde":-60, "UTC":0, 
+                 "Paris":60, "Cape Town":120, "Moscow":180, "Dubai":240, "Maldives":300, "Omsk":360, "Bangkok":420, "Shanghai":480, "Tokyo":540, "Sydney":600, "Solomon Islands":660, "Auckland":720} # add all desired timezones and their offsets
 @NS.route("")
 class SearchAvailabilities(Resource):
     '''Contains post method for logging in'''
