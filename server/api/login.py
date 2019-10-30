@@ -9,6 +9,7 @@ NS = api.namespace("login", description="Login an existing user")
 
 token = api.model('Token', {
     'token': fields.String,
+    'user_id': fields.String,
     'message': fields.String,
     'authenticated': fields.Boolean
 })
@@ -45,4 +46,9 @@ class Login(Resource):
     if not user:
       return {"message": "Invalid credentials", 'authenticated': False}
 
-    return get_token(user_name)
+    # HACK
+    token = get_token(user_name)
+    print(token)
+    token["user_id"] = user.id
+    print("now", token)
+    return token

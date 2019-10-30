@@ -9,6 +9,7 @@ NS = api.namespace('register',
 
 token = api.model('Token', {
     'token': fields.String,
+    'user_id': fields.String,
     'message': fields.String,
     'authenticated': fields.Boolean
 })
@@ -46,4 +47,6 @@ class Register(Resource):
     user = Users(user_name, email, password, pref_timezone)
     db.session.add(user)
     db.session.commit()
-    return get_token(user_name)
+    token = get_token(user_name)
+    token['user_id'] = user.id
+    return token

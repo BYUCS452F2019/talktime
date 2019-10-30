@@ -51,8 +51,28 @@ class AvailabilityWindow extends Component {
     let get_column = (array, n) => array.slice(1).map(r => r[n])
     let by_day = [...Array(7).keys()].map(n => get_column(cells, n + 1))
     let available_times = by_day.map(this.extract_timechunk)
-    console.log("available times: " + available_times)
-    // do fetch
+    console.log("available times: " + JSON.stringify(available_times))
+
+    Promise.all(available_times.map((availability, i) => {
+      return fetch("/api/add_availability", {
+        method: "post",
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorizaton': 'bearer: ' + localStorage.getItem("auth")
+        },
+        body: JSON.stringify({
+          "day_of_week": i,
+          "from_time": availability[0],
+          "to_time": availability[1]
+        })
+      })
+    }))
+           .then(values => values.map(v => v.json()))
+           .then(jsons => {
+             console.log("maybe succes in post:")
+             console.log(JSON.stringify(jsons))
+           })
   }
 
   render () {
@@ -64,7 +84,9 @@ class AvailabilityWindow extends Component {
             </Tab>
           </Tabs>
         </AppBar> 
-      <AvailabilityTable callback={this.update_availability}/>
+      <AvailabilityTable
+        callback={this.update_availability}
+      />
       </div>
     );
   } 

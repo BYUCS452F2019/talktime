@@ -61,6 +61,7 @@ function Login () {
         .then(result => {
           if (result.authenticated) {
             localStorage.setItem("auth", result.token)
+            localStorage.setItem("id", result.user_id)
             history.push("/home")
           } else {
             alert("Login unsuccessful")
