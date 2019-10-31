@@ -60,8 +60,9 @@ class AddAvailability(Resource):
             to_time = data['to_time']
             # logic to convert from and to times to a universal time.
             # ----------------------------------------------------------
-            timezone = curr_user.pref_timezone
-            offset = timezone_dict[timezone] # get offset from reference by timezone
+            #timezone = curr_user.pref_timezone
+            #offset = timezone_dict[timezone] # get offset from reference by timezone
+            offset = 0 # TODO temporary
             from_time -= offset
             to_time -= offset
             # logic for shifting to left (ie negative offset)
@@ -79,9 +80,6 @@ class AddAvailability(Resource):
                     from_time2 = 0000
                     to_time2 = to_time
                     to_time = 1440
-                    #print(day_of_week2)
-                    #print(from_time2)
-                    #print(to_time2)
                     availability = Availabilities(user_id, day_of_week2, from_time2, to_time2)
             # logic for shifting to the right (positive offset)
             elif to_time > 1440: # offset pushes end time into next day
@@ -103,15 +101,13 @@ class AddAvailability(Resource):
                     #print(to_time2)
                     availability = Availabilities(user_id, day_of_week2, from_time2, to_time2)
             # ----------------------------------------------------------
-            #print(day_of_week)
-            #print(from_time)
-            #print(to_time)
+            print("Committing!")
             availability = Availabilities(user_id, day_of_week, from_time, to_time)
             db.session.add(availability)
             db.session.commit()
             return {'message': 'Availability added successfully', 'success': True}
         except Exception as e:
-            print(e)
+            print("error", e)
             return {'message': "Post error, Traceback: ".format(e), 'success': False}
             
     @api.marshal_with(all_availabilities)
@@ -126,8 +122,9 @@ class AddAvailability(Resource):
                 day_of_week = availability.day_of_week
 
                 # shift from_time and to_time based on user pref_timezone
-                timezone = curr_user.pref_timezone
-                offset = timezone_dict[timezone]
+                #timezone = curr_user.pref_timezone
+                #offset = timezone_dict[timezone]
+                offset = 0 # TODO fixme
                 from_time += offset
                 to_time += offset
                 # logic for shifting to left (ie negative offset)
