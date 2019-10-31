@@ -14,6 +14,13 @@ class Availabilities(db.Model):
   # Relationships
   user = db.relationship('Users', backref='availabilities')
 
+
+  def __init__(self, user_id, day_of_week, from_time, to_time):
+    self.user_id = user_id
+    self.day_of_week = day_of_week
+    self.from_time = from_time
+    self.to_time = to_time
+
   def __repr__(self):
     return '<Availabilities -> id: {}, user_id: {}, day_of_week: {}, from_time: {}, to_time: {}'.format(
         self.id, self.user_id, self.day_of_week, self.from_time, self.to_time
