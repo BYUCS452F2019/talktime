@@ -15,6 +15,10 @@ class LanguagesWanted(db.Model):
   user = db.relationship('Users', backref='languages_wanted')
   language = db.relationship('Languages', backref='languages_wanted')
 
+  def __init__(self, user_id, language_id):
+    self.user_id = user_id
+    self.language_id = language_id
+
   def __repr__(self):
     return '<LanguagesWanted -> id: {}, user_id: {}, language_id: {}'.format(
         self.id, self.user_id, self.language_id

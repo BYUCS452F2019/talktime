@@ -3,6 +3,8 @@ from server.api import get_token
 from flask_restplus import Resource, fields
 from server.app import api, db
 from server.models.Users import Users
+from server.models.LanguagesKnown import LanguagesKnown
+from server.models.LanguagesWanted import LanguagesWanted
 
 NS = api.namespace('register',
                    description='Endpoint for registering a new user.')
@@ -18,7 +20,9 @@ form_input = api.model('Register form', {
     'user_name': fields.String,
     'email': fields.String,
     'password': fields.String,
-    'pref_timezone': fields.String
+    'pref_timezone': fields.String,
+    'native_language': fields.String,
+    'pref_language': fields.Integer
 })
 
 
@@ -31,7 +35,7 @@ class Register(Resource):
     if data == None:
       data = request.form
 
-    keys = ['user_name', 'email', 'password', 'pref_timezone']
+    keys = ['user_name', 'email', 'password', 'pref_timezone', 'native_language', 'pref_language']
     for key in keys:
       if key not in data:
         return {'message': 'Request missing field: {}'.format(key), 'authenticated': False}
@@ -44,6 +48,8 @@ class Register(Resource):
     email = data['email']
     password = data['password']
     pref_timezone = data['pref_timezone']
+    native_language = data['native_language']
+    pref_language = data['pref_language']
     user = Users(user_name, email, password, pref_timezone)
     db.session.add(user)
     db.session.commit()
