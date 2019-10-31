@@ -21,6 +21,7 @@ def token_required(func):
         "message": "Invalid token. Registeration and / or authentication required",
         "authenticated": False,
     }
+
     expired_msg = {
         "message": "Expired token. Reauthentication required.",
         "authenticated": False,

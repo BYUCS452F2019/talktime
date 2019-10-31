@@ -46,9 +46,6 @@ class Login(Resource):
     if not user:
       return {"message": "Invalid credentials", 'authenticated': False}
 
-    # HACK
     token = get_token(user_name)
-    print(token)
     token["user_id"] = user.id
-    print("now", token)
     return token

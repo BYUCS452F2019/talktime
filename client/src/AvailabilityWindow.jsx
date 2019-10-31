@@ -51,27 +51,32 @@ class AvailabilityWindow extends Component {
     let get_column = (array, n) => array.slice(1).map(r => r[n])
     let by_day = [...Array(7).keys()].map(n => get_column(cells, n + 1))
     let available_times = by_day.map(this.extract_timechunk)
-    console.log("available times: " + JSON.stringify(available_times))
 
-    Promise.all(available_times.map((availability, i) => {
-      return fetch("/api/add_availability", {
-        method: "post",
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          'Authorizaton': 'bearer: ' + localStorage.getItem("auth")
-        },
-        body: JSON.stringify({
-          "day_of_week": i,
-          "from_time": availability[0],
-          "to_time": availability[1]
+    Promise.all(available_times.map((availability_set, i) => {
+      return availability_set.map(availability => {
+        return fetch("/api/availabilities", {
+          method: "post",
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': 'bearer: ' + localStorage.getItem("auth")
+          },
+          body: JSON.stringify({
+            "user_id": localStorage.getItem("id"),
+            "day_of_week": i,
+            "from_time": availability[0],
+            "to_time": availability[1]
+          })
         })
       })
-    }))
-           .then(values => values.map(v => v.json()))
+    }).flat())
+           .then(values => Promise.all(values.map(v => v.json())))
            .then(jsons => {
-             console.log("maybe succes in post:")
-             console.log(JSON.stringify(jsons))
+             if (jsons.every(j => j.success)) {
+               alert("Availabilities saved")
+             } else {
+               alert("Unable to save availabilities!")
+             }
            })
   }
 
@@ -85,7 +90,9 @@ class AvailabilityWindow extends Component {
           </Tabs>
         </AppBar> 
       <AvailabilityTable
-        callback={this.update_availability}
+      callback={this.update_availability}
+      offset_minutes={this.offset_minutes}
+      start_minutes={this.start_minutes}
       />
       </div>
     );
