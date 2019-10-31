@@ -15,6 +15,7 @@ def index():
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
+
 # Set up Open API
 api = Api(app, version='1.0', title='Talktime REST API',
   description='API endpoints for the Talktime app.', doc='/docs')
@@ -25,3 +26,11 @@ app.register_blueprint(blueprint)
 CORS(app)
 
 from server import routes
+from .models.Languages import Languages
+
+languages = ['English', 'Spanish', 'Mandarin', 'Klingon']
+for l in languages:
+  language = Languages(l)
+  if Languages.query.filter_by(language_name=l).count() < 1:
+    db.session.add(language)
+db.session.commit()

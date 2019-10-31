@@ -6,6 +6,9 @@ class Languages(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   language_name = db.Column(db.String, nullable=False)
 
+  def __init__(self, language_name):
+    self.language_name = language_name
+
   def __repr__(self):
     return '<Languages -> id: {}, language_name: {}'.format(
         self.id, self.language_name
