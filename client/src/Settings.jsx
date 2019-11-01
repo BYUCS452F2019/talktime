@@ -61,32 +61,29 @@ const MenuProps = {
 
 export default function Settings() {
   const classes = useStyles();
-  const [languages, setLanguages] = React.useState([]);
+  const [languageWanted, setLanguageWanted] = React.useState([]);
+  const [nativeLanguage, setNativeLanguage] = React.useState([]);
   const [languageOptions, setLanguageOptions] = React.useState(["Placeholder1", "Placerholder2"]);
 
   useEffect(() => {
     fetch("/api/get_languages")
       .then(payload => payload.json())
       .then(res => {
-        setLanguageOptions(res.map(r => { return { id: r.id, name: r.name } }))
+        setLanguageOptions(res.map(r => { return { id: r.id, name: r.language_name } }))
       })
   }, [])
 
-  function handleChange(event) {
-    setLanguages(event.target.value);
+  function updateUserInfo() {
+    console.log("TODO - FIXME")
   }
 
-  function handleChangeMultiple(event) {
-    const { options } = event.target;
-    const value = [];
-    for (let i = 0, l = options.length; i < l; i += 1) {
-      if (options[i].selected) {
-        value.push(options[i].value);
-      }
-    }
-    setLanguages(value);
+  function handleLanguageWantedChange(event) {
+    setLanguageWanted(event.target.value);
   }
 
+  function handleNativeLanguageChange(event) {
+    setNativeLanguage(event.target.value)
+  }
 
   return (
     <React.Fragment>
@@ -103,13 +100,14 @@ export default function Settings() {
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
+                  autoComplete="username"
+                  name="username"
                   variant="outlined"
                   required
                   fullWidth
                   id="username"
                   label="Username"
-                  name="username"
-                  autoComplete="lname"
+                  autoFocus
                 />
               </Grid>
               <Grid item xs={12}>
@@ -137,36 +135,62 @@ export default function Settings() {
               </Grid>
               <Grid item xs={12}>
                 <FormControl className={classes.formControl}>
-                  <InputLabel htmlFor="select-multiple-chip">Languages</InputLabel>
+                  <InputLabel htmlFor="select-multiple-chip">Native Language</InputLabel>
                   <Select
-                    multiple
-                    value={languages}
-                    onChange={handleChange}
+                    id="native_language"
+                    value={nativeLanguage}
+                    onChange={handleNativeLanguageChange}
                     input={<Input id="select-multiple-chip" />}
-                    renderValue={selected => (
-                      <div className={classes.chips}>
-                        {selected.map(value => (
-                          <Chip key={value.id} label={value.name} className={classes.chip} />
-                        ))}
-                      </div>
-                    )}
+                    renderValue=
+                      {selected => {
+                        return languageOptions.filter(x => x.id == selected)[0].name
+                      }}
                     MenuProps={MenuProps}
                   >
-                    {languageOptions.map(language => (
-                      <MenuItem key={language.id} value={language.name}>
+                    {languageOptions.map(language =>
+                      <MenuItem key={language.id} value={language.id}>
                         {language.name}
                       </MenuItem>
-                    ))}
+                    )}
                   </Select>
-                </FormControl> 
+                </FormControl>
+              </Grid>
+              <Grid item xs={12}>
+                <FormControl className={classes.formControl}>
+                  <InputLabel htmlFor="select-multiple-chip">Novice Language</InputLabel>
+                  <Select
+                    id="language_wanted"
+                    value={languageWanted}
+                    onChange={handleLanguageWantedChange}
+                    input={<Input id="select-multiple-chip" />}
+                    renderValue=
+                      {selected => {
+                        return languageOptions.filter(x => x.id == selected)[0].name
+                      }}
+                    MenuProps={MenuProps}
+                  >
+                    {languageOptions.map(language =>
+                      <MenuItem key={language.id} value={language.id}>
+                        {language.name}
+                      </MenuItem>
+                    )}
+                  </Select>
+                </FormControl>
               </Grid>
             </Grid>
-            <center>
-            <Button variant="contained" color="primary" className={classes.button}>
-              Save Changes
+            <br />
+            <br />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+              onClick={() => updateUserInfo()}
+            >
+              Update Settings
             </Button>
-            </center>
-          </React.Fragment>
+         </React.Fragment>
         </Paper>
       </main>
     </React.Fragment>
