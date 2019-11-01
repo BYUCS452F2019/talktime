@@ -13,16 +13,12 @@ language = api.model('Language', {
   'language_name': fields.String
 })
 
-languages = api.model('Languages List', {
-  'languages': fields.List(fields.Nested(language))
-})
-
 NS = api.namespace('get_languages', 
   description="Get a list of available languages to use on Talktime.")
 
 @NS.route('')
 class GetLanguages(Resource):
-  @NS.marshal_with(languages)
+  @NS.marshal_list_with(language)
   def get(self):
     return [l.to_dict() for l in Languages.query.all()]
     

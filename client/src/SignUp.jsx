@@ -60,30 +60,24 @@ const MenuProps = {
 export default function SignUp() {
   const classes = useStyles();
   const history = useHistory();
-  const [languages, setLanguages] = React.useState([]);
+  const [languageWanted, setLanguageWanted] = React.useState([]);
+  const [nativeLanguage, setNativeLanguage] = React.useState([]);
   const [languageOptions, setLanguageOptions] = React.useState(["Placeholder1", "Placerholder2"]);
 
   useEffect(() => {
     fetch("api/get_languages")
       .then(payload => payload.json())
       .then(res => {
-        setLanguageOptions(res.map(r => { return { id: r.id, name: r.name } }))
+        setLanguageOptions(res.map(r => { return { id: r.id, name: r.language_name } }))
       })
   }, [])
 
-  function handleChange(event) {
-    setLanguages(event.target.value);
+  function handleLanguageWantedChange(event) {
+    setLanguageWanted(event.target.value);
   }
 
-  function handleChangeMultiple(event) {
-    const { options } = event.target;
-    const value = [];
-    for (let i = 0, l = options.length; i < l; i += 1) {
-      if (options[i].selected) {
-        value.push(options[i].value);
-      }
-    }
-    setLanguages(value);
+  function handleNativeLanguageChange(event) {
+    setNativeLanguage(event.target.value)
   }
 
   function register() {
@@ -91,6 +85,8 @@ export default function SignUp() {
       user_name: document.getElementById("username").value,
       email: document.getElementById("email").value,
       password: document.getElementById("password").value,
+      pref_language: document.getElementById("language_wanted").value,
+      native_language: document.getElementById("native_language").value,
       pref_timezone: "none"
     }
 
@@ -162,28 +158,47 @@ export default function SignUp() {
           </Grid>
           <Grid item xs={12}>
             <FormControl className={classes.formControl}>
-              <InputLabel htmlFor="select-multiple-chip">Languages</InputLabel>
+              <InputLabel htmlFor="select-multiple-chip">Native Language</InputLabel>
               <Select
-                multiple
-                value={languages}
-                onChange={handleChange}
+                id="native_language"
+                value={nativeLanguage}
+                onChange={handleNativeLanguageChange}
                 input={<Input id="select-multiple-chip" />}
-                renderValue={selected => (
-                  <div className={classes.chips}>
-                    {selected.map(value => (
-                      <Chip key={value.id} label={value.name} className={classes.chip} />
-                    ))}
-                  </div>
-                )}
+                renderValue=
+                  {selected => {
+                    return languageOptions.filter(x => x.id == selected)[0].name
+                  }}
                 MenuProps={MenuProps}
               >
-                {languageOptions.map(language => (
-                  <MenuItem key={language.id} value={language}>
+                {languageOptions.map(language =>
+                  <MenuItem key={language.id} value={language.id}>
                     {language.name}
                   </MenuItem>
-                ))}
+                 )}
               </Select>
             </FormControl> 
+          </Grid>
+          <Grid item xs={12}>
+            <FormControl className={classes.formControl}>
+              <InputLabel htmlFor="select-multiple-chip">Novice Language</InputLabel>
+              <Select
+                id="language_wanted"
+                value={languageWanted}
+                onChange={handleLanguageWantedChange}
+                input={<Input id="select-multiple-chip" />}
+                renderValue=
+                  {selected => {
+                    return languageOptions.filter(x => x.id == selected)[0].name
+                  }}
+                MenuProps={MenuProps}
+              >
+                {languageOptions.map(language =>
+                  <MenuItem key={language.id} value={language.id}>
+                    {language.name}
+                  </MenuItem>
+                 )}
+              </Select>
+            </FormControl>
           </Grid>
         </Grid>
         <Button
