@@ -13,3 +13,6 @@ class Timezones(db.Model):
     self.id = id
     self.name = name
     self.t_offset = offset
+
+  def to_dict(self):
+    return dict(id=self.id, timezone_name=self.name, timezone_offset=self.t_offset)

@@ -63,6 +63,8 @@ export default function Settings() {
   const classes = useStyles();
   const [languageWanted, setLanguageWanted] = React.useState([]);
   const [nativeLanguage, setNativeLanguage] = React.useState([]);
+  const [timezone, setTimezone] = React.useState([]);
+  const [timezoneOptions, setTimezoneOptions] = React.useState([]);
   const [languageOptions, setLanguageOptions] = React.useState(["Placeholder1", "Placerholder2"]);
 
   useEffect(() => {
@@ -72,6 +74,14 @@ export default function Settings() {
         setLanguageOptions(res.map(r => { return { id: r.id, name: r.language_name } }))
       })
   }, [])
+
+  useEffect(() => {
+    fetch("/api/get_timezones")
+      .then(payload => payload.json())
+      .then(res => {
+        setTimezoneOptions(res.map(r => { return { id: r.id, name: r.timezone_name, offset: r.timezone_offset } }))
+      })
+  })
 
   function updateUserInfo() {
     console.log("TODO - FIXME")
@@ -83,6 +93,10 @@ export default function Settings() {
 
   function handleNativeLanguageChange(event) {
     setNativeLanguage(event.target.value)
+  }
+
+  function handleTimezoneChange(event) {
+    setTimezone(event.target.value)
   }
 
   return (
@@ -172,6 +186,28 @@ export default function Settings() {
                     {languageOptions.map(language =>
                       <MenuItem key={language.id} value={language.id}>
                         {language.name}
+                      </MenuItem>
+                    )}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12}>
+                <FormControl className={classes.formControl}>
+                  <InputLabel htmlFor="select-multiple-chip">Timezone</InputLabel>
+                  <Select
+                    id="timezone"
+                    value={timezone}
+                    onChange={handleTimezoneChange}
+                    input={<Input id="select-multiple-chip" />}
+                    renderValue=
+                      {selected => {
+                        return timezoneOptions.filter(x => x.id == selected)[0].name
+                      }}
+                    MenuProps={MenuProps}
+                  >
+                    {timezoneOptions.map(timezone =>
+                      <MenuItem key={timezone.id} value={timezone.id}>
+                                        {timezone.name}
                       </MenuItem>
                     )}
                   </Select>

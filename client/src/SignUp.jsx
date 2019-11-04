@@ -62,7 +62,9 @@ export default function SignUp() {
   const history = useHistory();
   const [languageWanted, setLanguageWanted] = React.useState([]);
   const [nativeLanguage, setNativeLanguage] = React.useState([]);
-  const [languageOptions, setLanguageOptions] = React.useState(["Placeholder1", "Placerholder2"]);
+  const [timezone, setTimezone] = React.useState([]);
+  const [timezoneOptions, setTimezoneOptions] = React.useState([]);
+  const [languageOptions, setLanguageOptions] = React.useState([]);
 
   useEffect(() => {
     fetch("api/get_languages")
@@ -72,12 +74,24 @@ export default function SignUp() {
       })
   }, [])
 
+  useEffect(() => {
+    fetch("api/get_timezones")
+      .then(payload => payload.json())
+      .then(res => {
+        setTimezoneOptions(res.map(r => { return { id: r.id, name: r.timezone_name, offset: r.timezone_offset } }))
+      })
+  })
+
   function handleLanguageWantedChange(event) {
     setLanguageWanted(event.target.value);
   }
 
   function handleNativeLanguageChange(event) {
     setNativeLanguage(event.target.value)
+  }
+
+  function handleTimezoneChange(event) {
+    setTimezone(event.target.value)
   }
 
   function register() {
@@ -87,7 +101,7 @@ export default function SignUp() {
       password: document.getElementById("password").value,
       pref_language: document.getElementById("language_wanted").value,
       native_language: document.getElementById("native_language").value,
-      pref_timezone: "none"
+      pref_timezone: document.getElementById("timezone").value
     }
 
     fetch("/api/register", {
@@ -195,6 +209,28 @@ export default function SignUp() {
                 {languageOptions.map(language =>
                   <MenuItem key={language.id} value={language.id}>
                     {language.name}
+                  </MenuItem>
+                 )}
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item xs={12}>
+            <FormControl className={classes.formControl}>
+              <InputLabel htmlFor="select-multiple-chip">Timezone</InputLabel>
+              <Select
+                id="timezone"
+                value={timezone}
+                onChange={handleTimezoneChange}
+                input={<Input id="select-multiple-chip" />}
+                renderValue=
+                  {selected => {
+                    return timezoneOptions.filter(x => x.id == selected)[0].name
+                  }}
+                MenuProps={MenuProps}
+              >
+                {timezoneOptions.map(timezone =>
+                  <MenuItem key={timezone.id} value={timezone.id}>
+                                     {timezone.name}
                   </MenuItem>
                  )}
               </Select>

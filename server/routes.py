@@ -3,6 +3,7 @@ from server.api.register import Register
 from server.api.login import Login
 from server.api.update_user import UpdateUser
 from server.api.get_languages import GetLanguages
+from server.api.get_timezones import GetTimezones
 from server.api.search_timezone import SearchTimezone
 from server.api.availabilities import AddAvailability
 from server.api.search_availabilities import SearchAvailabilities
