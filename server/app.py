@@ -1,5 +1,5 @@
 from flask import Flask, Blueprint
-from server.config import Config
+from .config import Config
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_restplus import Api

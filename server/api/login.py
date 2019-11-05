@@ -7,9 +7,18 @@ from server.api import get_token
 
 NS = api.namespace("login", description="Login an existing user")
 
+
+# self.user_name = user_name
+#     self.email = email
+#     self.password_hash = generate_password_hash(password, method='sha256')
+#     self.pref_timezone = pref_timezone
+
 token = api.model('Token', {
     'token': fields.String,
     'user_id': fields.String,
+    'user_name': fields.String,
+    'email': fields.String,
+    'pref_timezone': fields.String,
     'message': fields.String,
     'authenticated': fields.Boolean
 })
