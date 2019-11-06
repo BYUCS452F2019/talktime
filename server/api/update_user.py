@@ -47,13 +47,15 @@ class UpdateUser(Resource):
       if key not in user_request:
         return {'message': 'Request missing field: {}'.format(key), 'authenticated': False}
 
+    print(cur_user)
     user_info = {
       "id": cur_user.id,
       "user_name": cur_user.user_name,
       "email": cur_user.email,
-      "pref_timezone": cur_user.pref_timezone
+      "pref_timezone": cur_user.pref_timezone,
     }
 
+    print(user_request)
     # Extracting parameters to update: user table
     user_patch = {}
     for key in user_request.keys():
@@ -67,7 +69,7 @@ class UpdateUser(Resource):
     new_language = user_request.get('native_language')
     if (new_language != ''):
       # Get the new language info, return error message if the language does not exist
-      language = Languages.query.filter_by(language_name=new_language).first()
+      language = Languages.query.filter_by(id=new_language).first()
       if (language == None):
         return {'message': 'Invalid native language'}
       #Update the native language
@@ -78,7 +80,7 @@ class UpdateUser(Resource):
     new_language = user_request.get('wanted_language')
     if (new_language != ''):
       # Get the new language info, return error message if the language does not exist
-      language = Languages.query.filter_by(language_name=new_language).first()
+      language = Languages.query.filter_by(id=new_language).first()
       if (language == None):
         return {'message': 'Invalid learning language'}
       #Update the learning language
@@ -86,8 +88,9 @@ class UpdateUser(Resource):
       user_learningLang.language_id = language.id
 
     # Check duplicates using filter_by
-    if Users.query.filter_by(user_name=user_patch['user_name']).count() > 0:
-      return {'message': 'Username is taken'}
+    if 'user_name' in user_patch:
+        if Users.query.filter_by(user_name=user_patch['user_name']).count() > 0:
+          return {'message': 'Username is taken'}
 
     if (len(user_patch) != 0):
       # Updating the user obejct info

@@ -65,7 +65,7 @@ export default function Settings() {
   const [nativeLanguage, setNativeLanguage] = React.useState([]);
   const [timezone, setTimezone] = React.useState([]);
   const [timezoneOptions, setTimezoneOptions] = React.useState([]);
-  const [languageOptions, setLanguageOptions] = React.useState(["Placeholder1", "Placerholder2"]);
+  const [languageOptions, setLanguageOptions] = React.useState([]);
 
   useEffect(() => {
     fetch("/api/get_languages")
@@ -76,15 +76,57 @@ export default function Settings() {
   }, [])
 
   useEffect(() => {
+    fetch("/api/get_user", {
+      method: "GET",
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'bearer: ' + localStorage.getItem("auth")
+      },
+    })
+      .then(payload => payload.json())
+      .then(res => {
+        setLanguageWanted(res.learning_id)
+        setNativeLanguage(res.native_id)
+        document.getElementById("username").value = res.user_name
+        document.getElementById("email").value = res.email
+      })
+  }, [])
+
+  useEffect(() => {
     fetch("/api/get_timezones")
       .then(payload => payload.json())
       .then(res => {
         setTimezoneOptions(res.map(r => { return { id: r.id, name: r.timezone_name, offset: r.timezone_offset } }))
       })
-  })
+  }, [])
 
   function updateUserInfo() {
-    console.log("TODO - FIXME")
+    let body = {
+      user_name: document.getElementById("username").value,
+      email: document.getElementById("email").value,
+      wanted_language: document.getElementById("language_wanted").value,
+      native_language: document.getElementById("native_language").value,
+      pref_timezone: document.getElementById("timezone").value
+    }
+
+    fetch("/api/update_user", {
+      method: "PATCH",
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'bearer: ' + localStorage.getItem("auth")
+      },
+      body: JSON.stringify(body)
+    }).then(payload => payload.json())
+      .then(result => {
+        if (result.message == "success") {
+          // TODO need to log out the user if username was changed
+          alert("User information successfully updated.")
+        } else {
+          alert("Unable to update user information")
+        }
+      })
   }
 
   function handleLanguageWantedChange(event) {
@@ -133,18 +175,6 @@ export default function Settings() {
                   label="Email Address"
                   name="email"
                   autoComplete="email"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  variant="outlined"
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="current-password"
                 />
               </Grid>
               <Grid item xs={12}>

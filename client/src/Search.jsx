@@ -61,30 +61,14 @@ const MenuProps = {
 
 export default function Search() {
   const classes = useStyles();
-  const [languages, setLanguages] = React.useState([]);
-  const [languageOptions, setLanguageOptions] = React.useState(["Placeholder1", "Placerholder2"]);
 
-  useEffect(() => {
-    fetch("https://ab-language-app.herokuapp.com/api/languages")
+  function search () {
+    fetch("/api/search_availabilities")
       .then(payload => payload.json())
-      .then(res => {
-        setLanguageOptions(res.map(r => { return { id: r.id, name: r.name } }))
+      .then(results => {
+        console.log("hello")
+        console.log(JSON.stringify(results))
       })
-  }, [])
-
-  function handleChange(event) {
-    setLanguages(event.target.value);
-  }
-
-  function handleChangeMultiple(event) {
-    const { options } = event.target;
-    const value = [];
-    for (let i = 0, l = options.length; i < l; i += 1) {
-      if (options[i].selected) {
-        value.push(options[i].value);
-      }
-    }
-    setLanguages(value);
   }
 
 
@@ -101,83 +85,17 @@ export default function Search() {
           <br />
           <React.Fragment>
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  autoComplete="fname"
-                  name="firstName"
-                  variant="outlined"
-                  required
-                  fullWidth
-                  id="firstName"
-                  label="First Name"
-                  autoFocus
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  variant="outlined"
-                  required
-                  fullWidth
-                  id="lastName"
-                  label="Last Name"
-                  name="lastName"
-                  autoComplete="lname"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  variant="outlined"
-                  required
-                  fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  variant="outlined"
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="current-password"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <FormControl className={classes.formControl}>
-                  <InputLabel htmlFor="select-multiple-chip">Languages</InputLabel>
-                  <Select
-                    multiple
-                    value={languages}
-                    onChange={handleChange}
-                    input={<Input id="select-multiple-chip" />}
-                    renderValue={selected => (
-                      <div className={classes.chips}>
-                        {selected.map(value => (
-                          <Chip key={value.id} label={value.name} className={classes.chip} />
-                        ))}
-                      </div>
-                    )}
-                    MenuProps={MenuProps}
-                  >
-                    {languageOptions.map(language => (
-                      <MenuItem key={language.id} value={language.name}>
-                        {language.name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
+              <Grid item xs={12} sm={12}>
+                <center>
+                <Button variant="contained"
+                        color="primary"
+                        className={classes.button}
+                        onClick={search}>
+                  Search for other users
+                </Button>
+                </center>
               </Grid>
             </Grid>
-            <center>
-            <Button variant="contained" color="primary" className={classes.button}>
-              Save Changes
-            </Button>
-            </center>
           </React.Fragment>
         </Paper>
       </main>

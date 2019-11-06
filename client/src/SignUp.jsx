@@ -116,6 +116,7 @@ export default function SignUp() {
       .then(result => {
         if (result.authenticated) {
           localStorage.setItem("auth", result.token)
+          localStorage.setItem("id", result.user_id)
           history.push("/home")
         } else {
           alert("Registration unsuccessful")
