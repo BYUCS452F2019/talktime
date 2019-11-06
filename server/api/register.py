@@ -12,10 +12,14 @@ NS = api.namespace('register',
 
 token = api.model('Token', {
     'token': fields.String,
-    'user_id': fields.String,
+    'user_id': fields.Integer,
     'user_name': fields.String,
     'email': fields.String,
     'pref_timezone': fields.String,
+    'learning_id': fields.Integer,
+    'learning_language': fields.String,
+    'native_id': fields.Integer,
+    'native_language': fields.String,
     'message': fields.String,
     'authenticated': fields.Boolean
 })
@@ -52,7 +56,8 @@ class Register(Resource):
     pref_language_id = data['pref_language']
 
     last_id = Users.query.all()[-1].id + 1
-    user = Users(id=last_id, user_name=user_name, email=email, password=password, pref_timezone=pref_timezone)
+    user = Users(id=last_id, user_name=user_name, email=email,
+                 password=password, pref_timezone=pref_timezone)
 
     native_language = Languages.query.get(native_language_id)
     pref_language = Languages.query.get(pref_language_id)
@@ -67,10 +72,14 @@ class Register(Resource):
     db.session.add(l_known)
     db.session.add(l_wanted)
     db.session.commit()
-    
+
     token = get_token(user_name)
     token['user_id'] = user.id
     token['user_name'] = user_name
     token['email'] = email
     token['pref_timezone'] = pref_timezone
+    token['native_id'] = native_language_id
+    token['native_language'] = native_language.language_name
+    token['learning_id'] = pref_language_id
+    token['learning_language'] = pref_language.language_name
     return token
