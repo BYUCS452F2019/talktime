@@ -80,7 +80,7 @@ class UpdateUser(Resource):
       # Get the new language info, return error message if the language does not exist
       language = Languages.query.filter_by(language_name=new_language).first()
       if (language == None):
-        return {'message': 'Invalid native language'}
+        return {'message': 'Invalid learning language'}
       #Update the learning language
       user_learningLang = LanguagesWanted.query.filter_by(user_id=cur_user.id).first()
       user_learningLang.language_id = language.id
