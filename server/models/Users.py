@@ -14,14 +14,15 @@ class Users(db.Model):
     self.id = kwargs.get('id')
     self.user_name = kwargs.get('user_name')
     self.email = kwargs.get('email')
-    self.password_hash = generate_password_hash(kwargs.get('password'), method='sha256')
+    self.password_hash = generate_password_hash(
+        kwargs.get('password'), method='sha256')
     self.pref_timezone = kwargs.get('pref_timezone')
 
   @classmethod
   def authenticate(cls, **kwargs):
     user_name = kwargs.get('user_name')
     password = kwargs.get('password')
-    
+
     if not user_name or not password:
       return None
 
@@ -38,4 +39,4 @@ class Users(db.Model):
 
   def to_dict(self):
     return dict(id=self.id, user_name=self.user_name, email=self.email,
-                password_hash=self.password_hash, pref_timezone=self.pref_timezone)
+                pref_timezone=self.pref_timezone)

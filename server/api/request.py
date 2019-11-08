@@ -5,6 +5,8 @@ from server.models.Requests import Requests
 from server.api import get_token, token_required, verify_request
 from server.models.Requests import Requests
 from server.models.Users import Users
+from server.api.get_user import USER_MODEL
+from server.helpers.user import get_user
 
 NS = api.namespace(
     'request', description="Make a request to chat with someone")
@@ -20,11 +22,37 @@ success_resp = api.model('Successful request', {
 })
 
 
+GET_REQUEST_RESPONSE = api.model('Get request response', {
+    'request_id': fields.Integer,
+    'user': fields.Nested(USER_MODEL),
+    'other_user': fields.Nested(USER_MODEL),
+    'from_time': fields.Integer,
+    'to_time': fields.Integer,
+    'req_accepted': fields.Boolean,
+    'req_confirmed': fields.Boolean
+})
+
+
 @NS.route('')
 class Request(Resource):
+  @NS.marshal_list_with(GET_REQUEST_RESPONSE)
   @token_required
   def get(self, user):
-    return 'list of requests'
+    requests = Requests.query.filter_by(user_id=user.id)
+
+    resp = []
+    for req in requests:
+      req_object = {
+          'request_id': req.id,
+          'user': get_user(req.user_id),
+          'other_user': get_user(req.other_user_id),
+          'from_time': req.from_time,
+          'to_time': req.to_time,
+          'req_accepted': req.req_accepted,
+          'req_confirmed': req.req_confirmed
+      }
+      resp.append(req_object)
+    return resp
 
   @NS.expect(request_form)
   @NS.marshal_with(success_resp)
