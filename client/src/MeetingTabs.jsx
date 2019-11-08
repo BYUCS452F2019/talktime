@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -29,6 +29,20 @@ export default function MeetingTabs() {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
 
+  useEffect(() => {
+    fetch("/api/request", {
+      method: "get",
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'bearer: ' + localStorage.getItem("auth")
+      },
+    }).then(payload => payload.json())
+      .then(result => {
+        console.log("got reslt: " + JSON.stringify(result))
+      })
+  }, [])
+
   function handleChange(event, newValue) {
     setValue(newValue);
   }
@@ -43,7 +57,6 @@ export default function MeetingTabs() {
       </AppBar>
       {value === 0 && <TabContainer>Item One</TabContainer>}
       {value === 1 && <TabContainer>Item Two</TabContainer>}
-      {value === 2 && <TabContainer>Item Three</TabContainer>}
     </div>
   );
 }
