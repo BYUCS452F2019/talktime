@@ -6,7 +6,6 @@ from flask import request
 from flask_restplus import Resource, fields
 from server.api import token_required
 from server.app import api, db
-from server.models.Users import Users
 from server.models.Requests import Requests
 
 #output form
