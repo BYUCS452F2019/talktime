@@ -1,4 +1,7 @@
+from server.models.Users import Users
+
 def get_user(user_id):
+  user = Users.query.get(user_id)
   resp = {
       'id': user.id,
       'user_name': user.user_name,

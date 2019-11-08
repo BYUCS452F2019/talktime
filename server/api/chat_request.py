@@ -24,10 +24,9 @@ success_resp = api.model('Successful request', {
 
 GET_REQUEST_RESPONSE = api.model('Get request response', {
     'request_id': fields.Integer,
-    'user': fields.Nested(USER_MODEL),
     'other_user': fields.Nested(USER_MODEL),
-    'from_time': fields.Integer,
-    'to_time': fields.Integer,
+    'from_time': fields.String,
+    'to_time': fields.String,
     'req_accepted': fields.Boolean,
     'req_confirmed': fields.Boolean
 })
@@ -35,7 +34,7 @@ GET_REQUEST_RESPONSE = api.model('Get request response', {
 
 @NS.route('')
 class Request(Resource):
-  @NS.marshal_list_with(GET_REQUEST_RESPONSE)
+  # @NS.marshal_list_with(GET_REQUEST_RESPONSE)
   @token_required
   def get(self, user):
     requests = Requests.query.filter_by(user_id=user.id)
@@ -44,10 +43,9 @@ class Request(Resource):
     for req in requests:
       req_object = {
           'request_id': req.id,
-          'user': get_user(req.user_id),
           'other_user': get_user(req.other_user_id),
-          'from_time': req.from_time,
-          'to_time': req.to_time,
+          'from_time': str(req.from_time),
+          'to_time': str(req.to_time),
           'req_accepted': req.req_accepted,
           'req_confirmed': req.req_confirmed
       }
