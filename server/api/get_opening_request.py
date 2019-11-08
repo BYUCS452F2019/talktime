@@ -11,6 +11,7 @@ from server.models.Requests import Requests
 
 #output form
 opening_request = api.model('Opening Request', {
+    'user_id': fields.Integer,
     'other_user_id': fields.Integer,
     'from_time': fields.Integer,
     'to_time': fields.Integer,
@@ -28,5 +29,5 @@ class GetOpeningRequest(Resource):
       # Search the request table and return all opening requests (confirmed = false, acceptd = false)
       return [ request.to_dict() for request in Requests.query.filter_by(
           other_user_id=cur_user.id, 
-          req_accepted=false,
-          req_confirmed=false).all() ]
+          req_accepted=False,
+          req_confirmed=False).all() ]
