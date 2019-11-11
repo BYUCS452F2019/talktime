@@ -10,3 +10,4 @@ from server.api.search_availabilities import SearchAvailabilities
 from server.api.accept_request import AcceptRequest
 from server.api.get_user import GetUser
 from server.api.chat_request import Request
+from server.api.get_opening_request import GetOpeningRequest
