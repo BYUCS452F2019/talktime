@@ -3,6 +3,8 @@ from server.api import token_required
 from flask_restplus import Resource, fields
 from server.app import api, db
 from server.models.Availabilities import Availabilities
+from server.models.Users import User
+from server.models.Timezones import Timezones
 from server.models.Users import Users
 
 NS = api.namespace('availabilities',
@@ -32,8 +34,6 @@ form = api.model('availability form', {
     'to_time': fields.Integer
 })
 
-timezone_dict = {"BakerIsland":-720, "Samoa":-660, "French Polynesia":-600, "Anchorage":-540, "Los Angeles":-480, "Denver":-420, "Dallis":-360, "New York":-300, "Virgin Islands":-240, "Rio":-180, "South Sandwish Islands":-120, "Cabo Verde":-60, "UTC":0, 
-                 "Paris":60, "Cape Town":120, "Moscow":180, "Dubai":240, "Maldives":300, "Omsk":360, "Bangkok":420, "Shanghai":480, "Tokyo":540, "Sydney":600, "Solomon Islands":660, "Auckland":720} # add all desired timezones and their offsets
 @NS.route('')
 class AddAvailability(Resource):
     @api.expect(form)
@@ -58,11 +58,9 @@ class AddAvailability(Resource):
             day_of_week = data['day_of_week']
             from_time = data['from_time']
             to_time = data['to_time']
-            # logic to convert from and to times to a universal time.
-            # ----------------------------------------------------------
-            #timezone = curr_user.pref_timezone
-            #offset = timezone_dict[timezone] # get offset from reference by timezone
-            offset = 0 # TODO temporary
+            timezone = curr_user.pref_timezone
+            Tz = Timezones.query.filter_by(name=timezone).first()
+            offset = Tz.t_offset
             from_time -= offset
             to_time -= offset
             # logic for shifting to left (ie negative offset)

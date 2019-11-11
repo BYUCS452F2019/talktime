@@ -22,11 +22,6 @@ response = api.model('Users', {
     'usernames': fields.List(fields.Nested(username))
 })
 
-# form = api.model('user', {
-#     'user_id': fields.String
-# })
-
-
 @NS.route("")
 class SearchTimezone(Resource):
   '''Contains post method for logging in'''
