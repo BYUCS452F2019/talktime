@@ -4,10 +4,6 @@ import "react-table-drag-select/style.css";
 import Button from '@material-ui/core/Button';
 
 class AvailabilityTable extends React.Component {
-  constructor(props) {
-    super(props)
-  }
-
   state = {
     cells: [
       [false, false, false, false, false, false, false, false],
@@ -30,7 +26,7 @@ class AvailabilityTable extends React.Component {
   is_available = (r, c, data) => {
     let from = this.props.offset_minutes + this.props.start_minutes + (r - 1) * 60
     let to = this.props.offset_minutes + this.props.start_minutes + r * 60 - 1
-    let ans = data.filter(x => x.day_of_week == c - 1)
+    let ans = data.filter(x => x.day_of_week === c - 1)
                   .some(x => from <= x.to_time && x.from_time <= to)
     return ans
   }
