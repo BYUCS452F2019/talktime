@@ -7,6 +7,7 @@ from server.models.Requests import Requests
 from server.models.Users import Users
 from server.api.get_user import USER_MODEL
 from server.helpers.user import get_user
+from server.app import mdb
 
 NS = api.namespace(
     'request', description="Make a request to chat with someone")
@@ -78,6 +79,13 @@ class Request(Resource):
       chat_request = Requests(user.id, partner_id, from_time, to_time)
       db.session.add(chat_request)
       db.session.commit()
+
+      partner = Users.query.get(partner_id)
+      mdb.notifications.insert_one({
+        'message': f'{partner.user_name} wants to chat with you!',
+        'read': False,
+        'user_id': user.id
+      })
       return {'message': 'Success'}
     except Exception as e:
       api.abort(500, 'Failed to create chat request')
