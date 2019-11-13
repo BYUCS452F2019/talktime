@@ -1,4 +1,5 @@
 from server.app import db
+from server.models.Users import Users
 
 
 class Requests(db.Model):
@@ -31,6 +32,7 @@ class Requests(db.Model):
     )
 
   def to_dict(self):
+    user = Users.query.get(self.user_id)
     return dict(id=self.id, user_id=self.user_id, other_user_id=self.other_user_id,
                 from_time=self.from_time, to_time=self.to_time, req_accepted=self.req_accepted,
-                req_confirmed=self.req_confirmed)
+                req_confirmed=self.req_confirmed, name=user.user_name)
