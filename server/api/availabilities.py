@@ -3,7 +3,6 @@ from server.api import token_required
 from flask_restplus import Resource, fields
 from server.app import api, db
 from server.models.Availabilities import Availabilities
-from server.models.Users import User
 from server.models.Timezones import Timezones
 from server.models.Users import Users
 
@@ -59,7 +58,7 @@ class AddAvailability(Resource):
             from_time = data['from_time']
             to_time = data['to_time']
             timezone = curr_user.pref_timezone
-            Tz = Timezones.query.filter_by(name=timezone).first()
+            Tz = Timezones.query.filter_by(id=timezone).first()
             offset = Tz.t_offset
             from_time -= offset
             to_time -= offset
@@ -120,9 +119,9 @@ class AddAvailability(Resource):
                 day_of_week = availability.day_of_week
 
                 # shift from_time and to_time based on user pref_timezone
-                #timezone = curr_user.pref_timezone
-                #offset = timezone_dict[timezone]
-                offset = 0 # TODO fixme
+                timezone = curr_user.pref_timezone
+                Tz = Timezones.query.filter_by(id=timezone).first()
+                offset = Tz.t_offset
                 from_time += offset
                 to_time += offset
                 # logic for shifting to left (ie negative offset)

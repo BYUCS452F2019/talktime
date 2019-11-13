@@ -50,7 +50,18 @@ class Dashboard extends Component {
         })
       })
 
-
+    fetch("/api/search_availabilities", {
+      method: "get",
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'bearer: ' + localStorage.getItem("auth")
+      }
+    })
+      .then(payload => payload.json())
+      .then(result => {
+        console.log("result: " + JSON.stringify(result))
+      })
   }
 
   render() {

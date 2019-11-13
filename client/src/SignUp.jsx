@@ -79,7 +79,7 @@ export default function SignUp() {
       .then(res => {
         setTimezoneOptions(res.map(r => { return { id: r.id, name: r.timezone_name, offset: r.timezone_offset } }))
       })
-  })
+  }, [])
 
   function handleLanguageWantedChange(event) {
     setLanguageWanted(event.target.value);

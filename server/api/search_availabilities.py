@@ -33,14 +33,14 @@ class SearchAvailabilities(Resource):
     '''Contains post method for logging in'''
     @api.marshal_with(response)
     @token_required
-    def post(self, curr_user):
+    def get(self, curr_user):
 
-        my_availabilities = Availabilities.query.filter_by(user_id=cur_user.id).all()
+        my_availabilities = Availabilities.query.filter_by(user_id=curr_user.id).all()
         availabilities = Availabilities.query.filter().all()
-        # availabilities = Availabilities.query.filter(Availabilities.user_id!=cur_user.id).all()
+        # availabilities = Availabilities.query.filter(Availabilities.user_id!=curr_user.id).all()
         valid_availabilities = []
         timezone = curr_user.pref_timezone
-        Tz = Timezones.query.filter_by(name=timezone)
+        Tz = Timezones.query.filter_by(id=timezone).first()
         offset = Tz.t_offset
         for my_availability in my_availabilities:
             req_day_of_week = my_availability.day_of_week
