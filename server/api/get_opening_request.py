@@ -10,7 +10,7 @@ from server.models.Requests import Requests
 
 #output form
 opening_request = api.model('Opening Request', {
-    'other_user_id': fields.Integer,
+    'user_name': fields.String,
     'from_time': fields.Integer,
     'to_time': fields.Integer,
     'req_accepted': fields.Boolean,
