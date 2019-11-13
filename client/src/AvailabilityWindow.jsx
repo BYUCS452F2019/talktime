@@ -32,15 +32,15 @@ class AvailabilityWindow extends Component {
     let ret = []
     let chunk = []
     for (let i = 0; i < col.length; i++) {
-      if (col[i] && chunk.length == 0) {
+      if (col[i] && chunk.length === 0) {
         chunk.push(i * 60 + this.start_minutes + this.offset_minutes)
-      } else if (!col[i] && chunk.length == 1) {
+      } else if (!col[i] && chunk.length === 1) {
         chunk.push(i * 60 + this.start_minutes + this.offset_minutes - 1)
         ret.push(chunk)
         chunk = []
       }
     }
-    if (chunk.length == 1) {
+    if (chunk.length === 1) {
       chunk.push(col.length * 60 + this.start_minutes + this.offset_minutes - 1)
       ret.push(chunk)
     }

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Login from './Login.jsx';
 import SignUp from './SignUp.jsx';
 import Home from './Home.jsx';
-import { BrowserRouter, Switch, Route, Link } from "react-router-dom";
+import { BrowserRouter, Switch, Route } from "react-router-dom";
 
 class App extends Component {
   render () {
