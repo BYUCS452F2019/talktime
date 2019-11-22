@@ -19,6 +19,7 @@ NS = api.namespace(
 availabilities = api.model('availability', {
     'id': fields.String,
     'user_id': fields.Integer,
+    'user_name': fields.String,
     'day_of_week': fields.Integer,
     'from_time': fields.Integer,
     'to_time': fields.Integer
@@ -80,10 +81,12 @@ class SearchAvailabilities(Resource):
                         from_time = 0000
                 if day_of_week == req_day_of_week:
                     if (from_time <= req_from_time and to_time >= req_from_time) or (from_time >= req_from_time and to_time <= req_to_time) or (from_time <= req_to_time and to_time >= req_to_time):
-                        valid_availabilities.append({'id': availability.id, 'user_id': availability.user_id,'day_of_week': day_of_week, 'from_time':from_time, 'to_time':to_time})
+                        user_name = Users.query.get(availability.user_id).user_name
+                        valid_availabilities.append({'id': availability.id, 'user_name': user_name, 'user_id': availability.user_id,'day_of_week': day_of_week, 'from_time':from_time, 'to_time':to_time})
                 elif day_of_week2 == req_day_of_week:
                     if (from_time2 <= req_from_time and to_time2 >= req_from_time) or (from_time2 >= req_from_time and to_time2 <= req_to_time) or (from_time2 <= req_to_time and to_time2 >= req_to_time):
-                        valid_availabilities.append({'id': availability.id, 'user_id': availability.user_id,'day_of_week': day_of_week2, 'from_time':from_time2, 'to_time':to_time2})
+                        user_name = Users.query.get(availability.user_id).user_name
+                        valid_availabilities.append({'id': availability.id, 'user_name': user_name, 'user_id': availability.user_id,'day_of_week': day_of_week2, 'from_time':from_time2, 'to_time':to_time2})
 
         res = {'availabilities': valid_availabilities}
 
