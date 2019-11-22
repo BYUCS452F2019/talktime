@@ -1,23 +1,3 @@
-<<<<<<< HEAD
-import React, { Component } from 'react';
-import { fade, makeStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
-import Avatar from '@material-ui/core/Avatar';
-import Tooltip from '@material-ui/core/Tooltip';
-import Badge from '@material-ui/core/Badge';
-import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import MailIcon from '@material-ui/icons/Mail';
-import NotificationsIcon from '@material-ui/icons/Notifications';
-import SettingsIcon from '@material-ui/icons/Settings';
-import CalendarIcon from '@material-ui/icons/CalendarToday';
-import PublicIcon from '@material-ui/icons/Public';
-import SignOutIcon from '@material-ui/icons/ExitToApp';
-import MoreIcon from '@material-ui/icons/MoreVert';
-=======
 import React, { useState, useEffect } from "react";
 import { fade, makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
@@ -34,7 +14,6 @@ import SettingsIcon from "@material-ui/icons/Settings";
 import CalendarIcon from "@material-ui/icons/CalendarToday";
 import PublicIcon from "@material-ui/icons/Public";
 import SignOutIcon from "@material-ui/icons/ExitToApp";
->>>>>>> mongo
 
 const useStyles = makeStyles(theme => ({
   grow: {
