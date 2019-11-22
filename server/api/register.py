@@ -6,6 +6,7 @@ from server.models.Users import Users
 from server.models.LanguagesKnown import LanguagesKnown
 from server.models.LanguagesWanted import LanguagesWanted
 from server.models.Languages import Languages
+from server.app import mdb
 
 NS = api.namespace('register',
                    description='Endpoint for registering a new user.')
@@ -82,4 +83,12 @@ class Register(Resource):
     token['native_language'] = native_language.language_name
     token['learning_id'] = pref_language_id
     token['learning_language'] = pref_language.language_name
+
+    # Insert a welcome notification
+    notifications = mdb.notifications
+    notifications.insert_one({
+      'message': f'Welcome to talktime, {user_name}!',
+      'read': False,
+      'user_id': user.id
+    })
     return token
