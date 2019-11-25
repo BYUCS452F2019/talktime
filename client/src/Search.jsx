@@ -1,14 +1,17 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Dialog from '@material-ui/core/Dialog';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers'
+import DateFnsUtils from '@date-io/date-fns';
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -23,39 +26,107 @@ const useStyles = makeStyles(theme => ({
     bottom: 0
   }
 }))
+
+function RequestChatDialog(props) {
+  const { onClose, onSubmit, open } = props
+  const [chatDate, setChatDate] = useState(new Date())
+  const [dateDialog, setDateDialog] = useState(false)
+  const [startTime, setStartTime] = useState(null)
+  const [endTime, setEndTime] = useState(null)
+
+  const handleChatDateChange = date => {
+    setChatDate(date)
+    setDateDialog(false)
+  }
+
+  const openDateDialog = () => {
+    setDateDialog(true)
+  }
+
+  const closeDateDialog = () => {
+    setDateDialog(false)
+  }
+
+  return(
+    <Dialog onClose={onClose} open={open}>
+      <DialogTitle>Make Chat Request</DialogTitle>
+      <DialogContent>
+        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+          <KeyboardDatePicker
+            value={chatDate}
+            onChange={handleChatDateChange}
+            open={dateDialog}
+            onOpen={openDateDialog}
+            onClose={closeDateDialog}
+            variant="inline" 
+            format="MM/dd/yyyy" 
+            disableToolbar 
+            label="Chat date"/>
+        </MuiPickersUtilsProvider>
+      </DialogContent>
+      <DialogActions>
+        <Button variant="contained" color="primary">Submit</Button>
+      </DialogActions>
+    </Dialog>
+  )
+}
+
 export default function Search() {
+  const [availabilities, setAvailabilities] = useState([])
+  const [matchedUsers, setMatchedUsers] = useState([])
+  const [requestDialogOpen, setRequestDialogOpen] = useState(false)
   const classes = useStyles()
-  const elems = [1, 2, 3]
-  const matchedUsers = [
-    {
-      'user_id': 1,
-      'user_name': 'Joe Biden'
-    },
-    {
-      'user_id': 2,
-      'user_name': 'Barrack Obama'
-    },
-    {
-      'user_id': 3,
-      'user_name': 'Donald Trump'
-    }
-  ]
+
+  const closeRequestDialog = () => {
+    setRequestDialogOpen(false)
+  }
+
+  const requestButtonClick = () => {
+    setRequestDialogOpen(true)
+  }
+  
+  useEffect(() => {
+    fetch("/api/search_availabilities", {
+      method: "get",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: "bearer: " + localStorage.getItem("auth")
+      }
+    })
+      .then(response => response.json())
+      .then(data => {
+        setAvailabilities(data)
+        let userIds = new Set()
+        let users = []
+        data.availabilities.forEach(item => {
+          if(!userIds.has(item.user_id)) {
+            userIds.add(item.user_id)
+            users.push({
+              'id': item.user_id,
+              'user_name': item.user_name
+            })
+          }
+        })
+        setMatchedUsers(users)
+      });
+  }, [])
   
   return (
     <div>
       {
         matchedUsers.map(user =>
-          <Card className={classes.card} key={user.user_id} raised>
+          <Card className={classes.card} key={user.id} raised>
             <CardContent>
               <Typography variant="h5">{user.user_name}</Typography>
             </CardContent>
             <CardActions className={classes.cardActions}>
-              <Button variant="contained" color="primary">Request to chat</Button>
+              <Button onClick={requestButtonClick} variant="contained" color="primary">Request to chat</Button>
             </CardActions>
           </Card>  
-          
         )
       }
+      <RequestChatDialog onClose={closeRequestDialog} open={requestDialogOpen}/>
     </div>
   )
 }
