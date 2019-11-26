@@ -5,7 +5,6 @@ import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
-import Chip from '@material-ui/core/Chip';
 import Grid from '@material-ui/core/Grid';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -120,7 +119,7 @@ export default function Settings() {
       body: JSON.stringify(body)
     }).then(payload => payload.json())
       .then(result => {
-        if (result.message == "success") {
+        if (result.message === "success") {
           // TODO need to log out the user if username was changed
           alert("User information successfully updated.")
         } else {
@@ -187,7 +186,7 @@ export default function Settings() {
                     input={<Input id="select-multiple-chip" />}
                     renderValue=
                       {selected => {
-                        return languageOptions.filter(x => x.id == selected)[0].name
+                        return languageOptions.filter(x => x.id === selected)[0].name
                       }}
                     MenuProps={MenuProps}
                   >
@@ -209,7 +208,7 @@ export default function Settings() {
                     input={<Input id="select-multiple-chip" />}
                     renderValue=
                       {selected => {
-                        return languageOptions.filter(x => x.id == selected)[0].name
+                        return languageOptions.filter(x => x.id === selected)[0].name
                       }}
                     MenuProps={MenuProps}
                   >
@@ -231,7 +230,7 @@ export default function Settings() {
                     input={<Input id="select-multiple-chip" />}
                     renderValue=
                       {selected => {
-                        return timezoneOptions.filter(x => x.id == selected)[0].name
+                        return timezoneOptions.filter(x => x.id === selected)[0].name
                       }}
                     MenuProps={MenuProps}
                   >

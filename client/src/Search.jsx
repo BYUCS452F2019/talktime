@@ -9,7 +9,6 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers'
 import DateFnsUtils from '@date-io/date-fns';
 
@@ -28,7 +27,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 function RequestChatDialog(props) {
-  const { onClose, onSubmit, open } = props
+  const { onClose, onSubmit, open,  selectedUserId } = props
   const [chatDate, setChatDate] = useState(new Date())
   const [dateDialog, setDateDialog] = useState(false)
   const [startTime, setStartTime] = useState(null)
@@ -65,6 +64,7 @@ function RequestChatDialog(props) {
         </MuiPickersUtilsProvider>
       </DialogContent>
       <DialogActions>
+        <Button color="secondary" onClick={onClose}>Cancel</Button>
         <Button variant="contained" color="primary">Submit</Button>
       </DialogActions>
     </Dialog>
@@ -75,13 +75,15 @@ export default function Search() {
   const [availabilities, setAvailabilities] = useState([])
   const [matchedUsers, setMatchedUsers] = useState([])
   const [requestDialogOpen, setRequestDialogOpen] = useState(false)
+  const [selectedUserId, setSelectedUserId] = useState(null)
   const classes = useStyles()
 
   const closeRequestDialog = () => {
     setRequestDialogOpen(false)
   }
 
-  const requestButtonClick = () => {
+  const requestButtonClick = (userId) => {
+    setSelectedUserId(userId)
     setRequestDialogOpen(true)
   }
   
@@ -121,12 +123,15 @@ export default function Search() {
               <Typography variant="h5">{user.user_name}</Typography>
             </CardContent>
             <CardActions className={classes.cardActions}>
-              <Button onClick={requestButtonClick} variant="contained" color="primary">Request to chat</Button>
+              <Button onClick={requestButtonClick(user.id)} variant="contained" color="primary">Request to chat</Button>
             </CardActions>
           </Card>  
         )
       }
-      <RequestChatDialog onClose={closeRequestDialog} open={requestDialogOpen}/>
+      <RequestChatDialog 
+        onClose={closeRequestDialog} 
+        open={requestDialogOpen} 
+        selectedUserId={selectedUserId}/>
     </div>
   )
 }

@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import HomeAppBar from "./HomeAppBar.jsx";
 import Settings from "./Settings.jsx";
 import Search from "./Search.jsx";
