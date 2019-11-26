@@ -27,11 +27,17 @@ const useStyles = makeStyles(theme => ({
 }))
 
 function RequestChatDialog(props) {
-  const { onClose, onSubmit, open,  selectedUserId } = props
+  const { availabilities, onClose, onSubmit, open,  selectedUserId } = props
   const [chatDate, setChatDate] = useState(new Date())
   const [dateDialog, setDateDialog] = useState(false)
   const [startTime, setStartTime] = useState(null)
   const [endTime, setEndTime] = useState(null)
+  const [filteredAvail, setFilteredAvail] = useState([])
+
+  // useEffect(() => {
+  //   let avails = availabilities.filter(item => item.user_id === selectedUserId)
+  //   setFilteredAvail(avails)
+  // }, [selectedUserId])
 
   const handleChatDateChange = date => {
     setChatDate(date)
@@ -53,6 +59,7 @@ function RequestChatDialog(props) {
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
           <KeyboardDatePicker
             value={chatDate}
+            disablePast
             onChange={handleChatDateChange}
             open={dateDialog}
             onOpen={openDateDialog}
@@ -84,6 +91,7 @@ export default function Search() {
 
   const requestButtonClick = (userId) => {
     setSelectedUserId(userId)
+    // console.log(userId)
     setRequestDialogOpen(true)
   }
   
@@ -123,12 +131,13 @@ export default function Search() {
               <Typography variant="h5">{user.user_name}</Typography>
             </CardContent>
             <CardActions className={classes.cardActions}>
-              <Button onClick={requestButtonClick(user.id)} variant="contained" color="primary">Request to chat</Button>
+              <Button onClick={() => requestButtonClick(user.id)} variant="contained" color="primary">Request to chat</Button>
             </CardActions>
           </Card>  
         )
       }
       <RequestChatDialog 
+        availabilities={availabilities}
         onClose={closeRequestDialog} 
         open={requestDialogOpen} 
         selectedUserId={selectedUserId}/>
