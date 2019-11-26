@@ -33,11 +33,15 @@ function RequestChatDialog(props) {
   const [startTime, setStartTime] = useState(null)
   const [endTime, setEndTime] = useState(null)
   const [filteredAvail, setFilteredAvail] = useState([])
+  const [availDays, setAvailDays] = useState(new Set())
 
-  // useEffect(() => {
-  //   let avails = availabilities.filter(item => item.user_id === selectedUserId)
-  //   setFilteredAvail(avails)
-  // }, [selectedUserId])
+
+  useEffect(() => {
+    let avails = availabilities.filter(item => item.user_id === selectedUserId)
+    let days = avails.map(item => item.day_of_week)
+    setFilteredAvail(avails)
+    setAvailDays(new Set(days))
+  }, [selectedUserId])
 
   const handleChatDateChange = date => {
     setChatDate(date)
@@ -50,6 +54,11 @@ function RequestChatDialog(props) {
 
   const closeDateDialog = () => {
     setDateDialog(false)
+  }
+
+  const shouldDisableDate = date => {
+    let day = (date.getDay()+1) % 7
+    return !availDays.has(day)
   }
 
   return(
@@ -67,6 +76,7 @@ function RequestChatDialog(props) {
             variant="inline" 
             format="MM/dd/yyyy" 
             disableToolbar 
+            shouldDisableDate={shouldDisableDate}
             label="Chat date"/>
         </MuiPickersUtilsProvider>
       </DialogContent>
@@ -106,7 +116,7 @@ export default function Search() {
     })
       .then(response => response.json())
       .then(data => {
-        setAvailabilities(data)
+        setAvailabilities(data.availabilities)
         let userIds = new Set()
         let users = []
         data.availabilities.forEach(item => {
