@@ -2,6 +2,7 @@ import React from "react";
 import HomeAppBar from "./HomeAppBar.jsx";
 import Settings from "./Settings.jsx";
 import Search from "./Search.jsx";
+import Dashboard from './Dashboard.jsx';
 import Availability from "./Availability.jsx";
 import { Switch, Route } from "react-router-dom";
 
@@ -12,6 +13,7 @@ const Home = () => {
     <div>
       <HomeAppBar />
       <Switch>
+        <Route exact path="/home" component={Dashboard}/>
         <Route exact path="/home/search" component={Search} />
         <Route exact path="/home/settings" component={Settings} />
         <Route exact path="/home/availability" component={Availability} />

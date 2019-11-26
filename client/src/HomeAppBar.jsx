@@ -12,7 +12,7 @@ import AccountCircle from "@material-ui/icons/AccountCircle";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import SettingsIcon from "@material-ui/icons/Settings";
 import CalendarIcon from "@material-ui/icons/CalendarToday";
-import PublicIcon from "@material-ui/icons/Public";
+import HomeIcon from "@material-ui/icons/Home";
 import SignOutIcon from "@material-ui/icons/ExitToApp";
 
 const useStyles = makeStyles(theme => ({
@@ -59,10 +59,10 @@ const HomeAppBar = () => {
           </IconButton>
           <Typography variant="h6">Talktime</Typography>
           <div className={classes.grow} />
-          <IconButton href="/home/search" color="inherit">
+          <IconButton href="/home" color="inherit">
             <Badge color="secondary">
-              <Tooltip title="Find someone to talk to">
-                <PublicIcon />
+              <Tooltip title="Home">
+                <HomeIcon />
               </Tooltip>
             </Badge>
           </IconButton>

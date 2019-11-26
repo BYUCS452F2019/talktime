@@ -33,8 +33,6 @@ const useStyles = makeStyles(theme => ({
 export default function MeetingTabs() {
   const classes = useStyles();
   const [open_requests, setOpenRequests] = React.useState([])
-  const [upcoming_meetings, setUpcomingMeetings] = React.useState([])
-
 
   useEffect(() => {
     fetch("/api/request", {
@@ -65,7 +63,6 @@ export default function MeetingTabs() {
         }]
 
         setOpenRequests(sample.filter(req => !req.req_confirmed && req.req_accepted))
-        setUpcomingMeetings(sample.filter(req => req.req_confirmed && req.req_accepted))
       })
   }, []);
 
@@ -100,7 +97,7 @@ export default function MeetingTabs() {
             Open Requests
           </Typography>
         </Toolbar>
-    </AppBar>
+      </AppBar>
         <List component="nav">
           {
             open_requests.map(req =>

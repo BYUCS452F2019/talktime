@@ -24,7 +24,7 @@ class AvailabilityWindow extends Component {
   constructor(props) {
     super(props)
 
-    this.offset_minutes = (new Date()).getTimezoneOffset()
+    this.offset_minutes = 0
     this.start_minutes = 60 * 8
   }
 
