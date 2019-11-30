@@ -58,8 +58,10 @@ class AddAvailability(Resource):
             from_time = data['from_time']
             to_time = data['to_time']
             timezone = curr_user.pref_timezone
-            Tz = Timezones.query.filter_by(id=timezone).first()
-            offset = Tz.t_offset
+
+
+            #Tz = Timezones.query.filter_by(id=timezone).first()
+            offset = 0#Tz.t_offset
             from_time -= offset
             to_time -= offset
             # logic for shifting to left (ie negative offset)
@@ -120,8 +122,8 @@ class AddAvailability(Resource):
 
                 # shift from_time and to_time based on user pref_timezone
                 timezone = curr_user.pref_timezone
-                Tz = Timezones.query.filter_by(id=timezone).first()
-                offset = Tz.t_offset
+                #Tz = Timezones.query.filter_by(id=timezone).first()
+                offset = 0#Tz.t_offset
                 from_time += offset
                 to_time += offset
                 # logic for shifting to left (ie negative offset)

@@ -55,11 +55,12 @@ class Login(Resource):
     user_name = data["user_name"]
     password = data["password"]
     user = Users.authenticate(user_name=user_name, password=password)
-    ls_wanted = user.languages_wanted
-    ls_known = user.languages_known
 
     if not user:
       return {"message": "Invalid credentials", 'authenticated': False}
+    
+    ls_wanted = user.languages_wanted
+    ls_known = user.languages_known
 
     token = get_token(user_name)
     token["user_id"] = user.id
