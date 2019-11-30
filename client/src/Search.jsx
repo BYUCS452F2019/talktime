@@ -11,6 +11,9 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers'
 import DateFnsUtils from '@date-io/date-fns';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -29,6 +32,7 @@ const useStyles = makeStyles(theme => ({
 function RequestChatDialog(props) {
   const { availabilities, onClose, onSubmit, open,  selectedUserId } = props
   const [chatDate, setChatDate] = useState(new Date())
+  const [chatFromTo, setChatFromTo] = useState("")
   const [dateDialog, setDateDialog] = useState(false)
   const [startTime, setStartTime] = useState(null)
   const [endTime, setEndTime] = useState(null)
@@ -61,6 +65,71 @@ function RequestChatDialog(props) {
     return !availDays.has(day)
   }
 
+  const submitRequest = () => {
+    console.log("submit chat request")
+    console.log(chatFromTo, chatDate, selectedUserId)
+    let date_string = chatDate.getFullYear() + "-" + chatDate.getMonth() + "-" + chatDate.getDate()
+    fetch("/api/request", {
+      method: "post",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: "bearer: " + localStorage.getItem("auth")
+      },
+      body: JSON.stringify({
+        "partner_id": selectedUserId,
+        "date": date_string,
+        "from_time": parseInt(chatFromTo.split(" ")[0]),
+        "to_time": parseInt(chatFromTo.split(" ")[1])
+      })
+    })
+      .then(response => response.json())
+      .then(data => {
+        if ("id" in data) {
+          alert("Successfully made the request")
+        }
+      })
+  }
+
+  const handleChatTimeChange = evt => {
+    setChatFromTo(evt.target.value)
+  }
+
+  const getOverlap = (ls, b) => {
+    let overlapping = ls.find(a => {
+      let day = (chatDate.getDay()+1) % 7
+      if (a.day_of_week !== day || b.day_of_week !== day) {
+        return false
+      }
+
+      if (!(a.from_time <= b.to_time && b.from_time <= a.to_time)) {
+        return false
+      }
+
+      return true
+    })
+
+    if (typeof overlapping === 'undefined') {
+      return false;
+    }
+
+    let convert_time = (minutes) => {
+      let n_hours = (Math.ceil(minutes / 10) * 10- 8*60) / 60
+      let ampm = minutes >= 720 ? "pm" : "am"
+      return (n_hours + 7) % 12 + 1 + ":00" + " " + ampm
+    }
+
+    let new_from_time = Math.max(overlapping.from_time, b.from_time)
+    let new_to_time = Math.min(overlapping.to_time, b.to_time)
+    let new_title = convert_time(new_from_time) + " - " + convert_time(new_to_time)
+
+    return {
+      "title": new_title,
+      "from_time": new_from_time,
+      "to_time": new_to_time
+    }
+  }
+
   return(
     <Dialog onClose={onClose} open={open}>
       <DialogTitle>Make Chat Request</DialogTitle>
@@ -79,10 +148,23 @@ function RequestChatDialog(props) {
             shouldDisableDate={shouldDisableDate}
             label="Chat date"/>
         </MuiPickersUtilsProvider>
+
+        <RadioGroup name="time_picker" value={chatFromTo} onChange={handleChatTimeChange}>
+          {
+            availabilities
+              .filter(a => a.user_id == localStorage.getItem("id"))
+              .map(a => getOverlap(filteredAvail, a))
+              .filter(a => a)
+              .map(a => <FormControlLabel
+                          value={a.from_time + " " + a.to_time}
+                          control={<Radio/>}
+                          label={a.title}/>)
+          }
+        </RadioGroup>
       </DialogContent>
       <DialogActions>
         <Button color="secondary" onClick={onClose}>Cancel</Button>
-        <Button variant="contained" color="primary">Submit</Button>
+        <Button variant="contained" onClick={submitRequest} color="primary">Send</Button>
       </DialogActions>
     </Dialog>
   )
@@ -101,7 +183,6 @@ export default function Search() {
 
   const requestButtonClick = (userId) => {
     setSelectedUserId(userId)
-    // console.log(userId)
     setRequestDialogOpen(true)
   }
   
@@ -154,47 +235,3 @@ export default function Search() {
     </div>
   )
 }
-
-// export default function Search() {
-//   const classes = useStyles();
-
-//   function search () {
-//     fetch("/api/search_availabilities")
-//       .then(payload => payload.json())
-//       .then(results => {
-//         console.log("hello")
-//         console.log(JSON.stringify(results))
-//       })
-//   }
-
-
-//   return (
-//     <React.Fragment>
-//       <CssBaseline />
-//       <main className={classes.layout}>
-//         <Paper className={classes.paper}>
-//           <Typography component="h1" variant="h4" align="center">
-//             Search
-//           </Typography>
-//           <br />
-//           <br />
-//           <br />
-//           <React.Fragment>
-//             <Grid container spacing={2}>
-//               <Grid item xs={12} sm={12}>
-//                 <center>
-//                 <Button variant="contained"
-//                         color="primary"
-//                         className={classes.button}
-//                         onClick={search}>
-//                   Search for other users
-//                 </Button>
-//                 </center>
-//               </Grid>
-//             </Grid>
-//           </React.Fragment>
-//         </Paper>
-//       </main>
-//     </React.Fragment>
-//   );
-// }

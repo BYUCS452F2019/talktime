@@ -1,16 +1,8 @@
 import React, { Component } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
-import Button from '@material-ui/core/Button';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import CardActions from '@material-ui/core/CardActions';
 import Grid from '@material-ui/core/Grid';
-import GridList from '@material-ui/core/GridList';
-import GridListTile from '@material-ui/core/GridListTile';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Search from './Search.jsx';
 import Typography from '@material-ui/core/Typography';
@@ -84,10 +76,6 @@ class Dashboard extends Component {
       return (n_hours + 7) % 12 + 1 + ":00"
     }
     let ampm = (minutes) => minutes >= 720 ? "pm" : "am"
-
-    console.log(req)
-    console.log(req.day_of_week)
-    console.log(req.from_time)
 
     return day_to_time[req.day_of_week] + "s, " + convert_time(req.from_time) + ampm(req.from_time) + " - " + convert_time(req.to_time) + ampm(req.to_time)
   }
