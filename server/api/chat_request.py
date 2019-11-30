@@ -77,11 +77,13 @@ class Request(Resource):
     # Make sure the user requested to chat with exists
     if not Users.query.get(partner_id):
       api.abort(401, 'You cannot make a request with a nonexistent user')
+    
+    other_user = Users.query.get(partner_id)
 
-    # try:
     chat_request = {
       'user_id': user.id,
       'other_user_id': partner_id,
+      'other_user_name': other_user.user_name,
       'from_time': from_time,
       'to_time': to_time,
       'date': datetime.datetime.strptime(date, '%Y-%m-%d'),
@@ -92,16 +94,4 @@ class Request(Resource):
     return {
       'id': req_id
     }
-      # chat_request = Requests(user.id, partner_id, from_time, to_time)
-      # db.session.add(chat_request)
-      # db.session.commit()
 
-      # partner = Users.query.get(partner_id)
-      # mdb.notifications.insert_one({
-      #   'message': f'{partner.user_name} wants to chat with you!',
-      #   'read': False,
-      #   'user_id': user.id
-      # })
-      # return {'message': 'Success'}
-    # except Exception as e:
-    #   api.abort(500, 'Failed to create chat request')
