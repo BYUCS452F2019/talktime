@@ -56,7 +56,11 @@ class Register(Resource):
     native_language_id = data['native_language']
     pref_language_id = data['pref_language']
 
-    last_id = Users.query.all()[-1].id + 1
+    if Users.query.count() < 1:
+      last_id = 1
+    else:
+      last_id = Users.query.all()[-1].id + 1
+      
     user = Users(id=last_id, user_name=user_name, email=email,
                  password=password, pref_timezone=pref_timezone)
 
