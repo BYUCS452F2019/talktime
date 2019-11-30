@@ -91,6 +91,12 @@ class Request(Resource):
       'req_confirmed': False
     }
     req_id = mdb.requests.insert_one(chat_request).inserted_id
+
+    mdb.notifications.insert_one({
+      'message': f'{other_user.user_name} wants to chat with you!',
+      'read': False,
+      'user_id': user.id
+    })
     return {
       'id': req_id
     }
