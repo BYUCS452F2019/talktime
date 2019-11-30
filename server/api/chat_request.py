@@ -8,18 +8,20 @@ from server.models.Users import Users
 from server.api.get_user import USER_MODEL
 from server.helpers.user import get_user
 from server.app import mdb
+import datetime
 
 NS = api.namespace(
     'request', description="Make a request to chat with someone")
 
 request_form = api.model('Request form', {
     'partner_id': fields.Integer,
+    'date': fields.String,
     'from_time': fields.Integer,
     'to_time': fields.Integer
 })
 
 success_resp = api.model('Successful request', {
-    'message': fields.String
+    'id': fields.String
 })
 
 
@@ -61,11 +63,12 @@ class Request(Resource):
     if not data:
       data = request.form
 
-    verify_request(['partner_id', 'from_time', 'to_time'], data)
+    verify_request(['partner_id', 'date', 'from_time', 'to_time'], data)
 
     partner_id = int(data['partner_id'])
-    from_time = data['from_time']
-    to_time = data['to_time']
+    date = data['date']
+    from_time = int(data['from_time'])
+    to_time = int(data['to_time'])
 
     # Make sure ids are distinct
     if partner_id == user.id:
@@ -75,17 +78,30 @@ class Request(Resource):
     if not Users.query.get(partner_id):
       api.abort(401, 'You cannot make a request with a nonexistent user')
 
-    try:
-      chat_request = Requests(user.id, partner_id, from_time, to_time)
-      db.session.add(chat_request)
-      db.session.commit()
+    # try:
+    chat_request = {
+      'user_id': user.id,
+      'other_user_id': partner_id,
+      'from_time': from_time,
+      'to_time': to_time,
+      'date': datetime.datetime.strptime(date, '%Y-%m-%d'),
+      'req_accepted': False,
+      'req_confirmed': False
+    }
+    req_id = mdb.requests.insert_one(chat_request).inserted_id
+    return {
+      'id': req_id
+    }
+      # chat_request = Requests(user.id, partner_id, from_time, to_time)
+      # db.session.add(chat_request)
+      # db.session.commit()
 
-      partner = Users.query.get(partner_id)
-      mdb.notifications.insert_one({
-        'message': f'{partner.user_name} wants to chat with you!',
-        'read': False,
-        'user_id': user.id
-      })
-      return {'message': 'Success'}
-    except Exception as e:
-      api.abort(500, 'Failed to create chat request')
+      # partner = Users.query.get(partner_id)
+      # mdb.notifications.insert_one({
+      #   'message': f'{partner.user_name} wants to chat with you!',
+      #   'read': False,
+      #   'user_id': user.id
+      # })
+      # return {'message': 'Success'}
+    # except Exception as e:
+    #   api.abort(500, 'Failed to create chat request')
