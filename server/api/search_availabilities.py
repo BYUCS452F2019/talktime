@@ -41,8 +41,8 @@ class SearchAvailabilities(Resource):
         # availabilities = Availabilities.query.filter(Availabilities.user_id!=curr_user.id).all()
         valid_availabilities = []
         timezone = curr_user.pref_timezone
-        Tz = Timezones.query.filter_by(id=timezone).first()
-        offset = Tz.t_offset
+        #Tz = Timezones.query.filter_by(id=timezone).first()
+        offset = 0#Tz.t_offset
         for my_availability in my_availabilities:
             req_day_of_week = my_availability.day_of_week
             req_from_time = my_availability.from_time
