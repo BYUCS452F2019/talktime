@@ -3,9 +3,10 @@ from flask_restplus import Resource, fields
 from server.app import api, db
 from server.models.Requests import Requests
 from server.api import get_token, token_required
+from server.app import mdb
 
 request_form = api.model('Accept request model', {
-  'request_id': fields.Integer
+  'request_id': fields.String
 })
 
 accept_response = api.model('Accept request response', {
@@ -29,20 +30,23 @@ class AcceptRequest(Resource):
       accept_request = request.form
 
     # Query the Request table for info about this chat request
-    request_id = accept_request['request_id']
-    chat_request = Requests.query.get(request_id)
+    # request_id = accept_request['request_id']
+    # chat_request = Requests.query.get(request_id)
 
-    if (chat_request == None):
-        api.abort(401, 'Invalid request ID')
+    # if (chat_request == None):
+    #     api.abort(401, 'Invalid request ID')
 
-    # Verify that the current user is requested with this chat request
-    if (chat_request.other_user_id != cur_user.user_id):
-        api.abort(401, 'This chat invitation does not belong to the current user')
+    # # Verify that the current user is requested with this chat request
+    # if (chat_request.other_user_id != cur_user.user_id):
+    #     api.abort(401, 'This chat invitation does not belong to the current user')
 
     # Requests Verified, Try to accept the request by changing the req_accepted column to True
     try:
-        chat_request.req_accepted = True
-        db.session.commit()
+        query = {"_id": accept_request['request_id']}
+        new_vals = {"req_accepted": True}
+        mdb.requests.update_one(query, new_vals)
+        # chat_request.req_accepted = True
+        # db.session.commit()
         return {'message': 'Success'}
     except Exception as e:
         api.abort(500, 'Failed to accept chat request')
