@@ -42,13 +42,13 @@ class AcceptRequest(Resource):
     #     api.abort(401, 'This chat invitation does not belong to the current user')
 
     # Requests Verified, Try to accept the request by changing the req_accepted column to True
-    try:
-        query = {"_id": ObjectId(accept_request['request_id'])}
-        new_vals = {"req_accepted": True}
-        mdb.requests.update_one(query, new_vals)
-        # chat_request.req_accepted = True
-        # db.session.commit()
-        return {'message': 'Success'}
-    except Exception as e:
-        api.abort(500, 'Failed to accept chat request')
+    # try:
+    query = {"_id": ObjectId(accept_request['request_id'])}
+    new_vals = {"req_accepted": True}
+    mdb.requests.update_one(query, new_vals)
+    # chat_request.req_accepted = True
+    # db.session.commit()
+    return {'message': 'Success'}
+    # except Exception as e:
+    #     api.abort(500, 'Failed to accept chat request')
 
