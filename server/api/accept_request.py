@@ -44,7 +44,7 @@ class AcceptRequest(Resource):
     # Requests Verified, Try to accept the request by changing the req_accepted column to True
     # try:
     query = {"_id": ObjectId(accept_request['request_id'])}
-    new_vals = {"req_accepted": True}
+    new_vals = {"$set": {"req_accepted": True}}
     mdb.requests.update_one(query, new_vals)
     # chat_request.req_accepted = True
     # db.session.commit()
