@@ -28,9 +28,7 @@ class GetOpeningRequest(Resource):
   def get(self, cur_user):
       # Search the request table and return all opening requests (confirmed = false, acceptd = false)
       open_requests = mdb.requests.find({
-        'other_user_id': cur_user.id,
-        'req_accepted': False,
-        'req_confirmed': False
+        'other_user_id': cur_user.id
       })
       reqs = []
       for r in open_requests:
