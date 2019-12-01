@@ -4,6 +4,7 @@ from server.app import api, db
 from server.models.Requests import Requests
 from server.api import get_token, token_required
 from server.app import mdb
+from bson import ObjectId
 
 request_form = api.model('Accept request model', {
   'request_id': fields.String
@@ -42,7 +43,7 @@ class AcceptRequest(Resource):
 
     # Requests Verified, Try to accept the request by changing the req_accepted column to True
     try:
-        query = {"_id": accept_request['request_id']}
+        query = {"_id": ObjectId(accept_request['request_id'])}
         new_vals = {"req_accepted": True}
         mdb.requests.update_one(query, new_vals)
         # chat_request.req_accepted = True
