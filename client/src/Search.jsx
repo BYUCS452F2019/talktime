@@ -66,8 +66,6 @@ function RequestChatDialog(props) {
   }
 
   const submitRequest = () => {
-    console.log("submit chat request")
-    console.log(chatFromTo, chatDate, selectedUserId)
     let date_string = chatDate.getFullYear() + "-" + chatDate.getMonth() + "-" + chatDate.getDate()
     fetch("/api/request", {
       method: "post",
@@ -155,6 +153,25 @@ function RequestChatDialog(props) {
               .filter(a => a.user_id == localStorage.getItem("id"))
               .map(a => getOverlap(filteredAvail, a))
               .filter(a => a)
+              /*.map(a => {
+                 let convert_time = (minutes) => {
+                    let n_hours = (Math.ceil(minutes / 10) * 10- 8*60) / 60
+                    let ampm = minutes >= 720 ? "pm" : "am"
+                    return (n_hours + 7) % 12 + 1 + ":00" + " " + ampm
+                  }
+                let new_from_time = Math.max(a.from_time, a.from_time)
+                let new_to_time = Math.min(a.to_time, a.to_time)
+                let new_title = convert_time(new_from_time) + " - " + convert_time(new_to_time)
+                return {
+                  "title": new_title,
+                  "from_time": new_from_time,
+                  "to_time": new_to_time
+                }
+              })*/
+              .filter((a, i, self) => {
+                let m = self.slice(i + 1).map(x => x.title)
+                return !m.includes(a.title)
+              })
               .map(a => <FormControlLabel
                           value={a.from_time + " " + a.to_time}
                           control={<Radio/>}
@@ -216,7 +233,9 @@ export default function Search() {
   return (
     <div>
       {
-        matchedUsers.map(user =>
+        matchedUsers
+          .filter(user => user.id != localStorage.getItem("id"))
+          .map(user =>
           <Card className={classes.card} key={user.id} raised>
             <CardContent>
               <Typography variant="h5">{user.user_name}</Typography>

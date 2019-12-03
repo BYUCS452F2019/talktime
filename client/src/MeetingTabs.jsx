@@ -35,7 +35,11 @@ export default function MeetingTabs() {
   const [open_requests, setOpenRequests] = React.useState([])
 
   useEffect(() => {
-    fetch("/api/request", {
+    fetchOpenRequests()
+  }, []);
+
+  function fetchOpenRequests () {
+    fetch("/api/get_opening_request", {
       method: "get",
       headers: {
         'Accept': 'application/json',
@@ -44,33 +48,12 @@ export default function MeetingTabs() {
       },
     }).then(payload => payload.json())
       .then(result => {
-        console.log("got reslt: " + JSON.stringify(result))
-
-        let sample = [{
-          "user_name": "bob",
-          "other_user_id": 0,
-          "from_time": 0,
-          "to_time": 0,
-          "req_accepted": true,
-          "req_confirmed": true
-        }, {
-          "user_name": "jane",
-          "other_user_id": 1,
-          "from_time": 0,
-          "to_time": 0,
-          "req_accepted": true,
-          "req_confirmed": false
-        }]
-
-        setOpenRequests(sample.filter(req => !req.req_confirmed && req.req_accepted))
+        setOpenRequests(result.filter(req => !req.req_confirmed && !req.req_accepted))
       })
-  }, []);
+  }
 
   function handleRequest(req, will_accept) {
-    console.log(JSON.stringify(req))
-    console.log("will I accept: " + will_accept)
-
-    /*fetch("/api/request", {
+    fetch("/api/accept_request", {
       method: "post",
       headers: {
         'Accept': 'application/json',
@@ -78,15 +61,18 @@ export default function MeetingTabs() {
         'Authorization': 'bearer: ' + localStorage.getItem("auth")
       },
       body: JSON.stringify({
-        'partner_id': req.other_id,
-        'from_time': req.from_time,
-        'to_time': req.to_time
+        'request_id': "" + req._id
       })
     })
       .then(payload => payload.json())
       .then(result => {
-        console.log("result: " + JSON.stringify(result)
-      })*/
+        if ("message" in result && result.message == "Success") {
+          alert("Accepted request")
+          fetchOpenRequests()
+        } else {
+          alert("Unable to accept request")
+        }
+      })
   }
 
   return (
@@ -102,14 +88,11 @@ export default function MeetingTabs() {
           {
             open_requests.map(req =>
               <ListItem>
-                <ListItemText primary={req.user_name} />
+                <ListItemText primary={req.other_user_name} />
                 <ButtonGroup size="small" variant="contained" color="primary">
                   <Button variant="contained"
                           color="primary"
                           onClick={() => handleRequest(req, true)}>Accept</Button>
-                  <Button variant="contained"
-                          color="secondary"
-                          onClick={() => handleRequest(req, false)}>Reject</Button>
                 </ButtonGroup>
               </ListItem>)
           }

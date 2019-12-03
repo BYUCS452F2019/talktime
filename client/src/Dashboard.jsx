@@ -18,7 +18,7 @@ class Dashboard extends Component {
   }
 
   componentDidMount() {
-    fetch("/api/request", {
+    fetch("/api/get_opening_request", {
       method: "get",
       headers: {
         'Accept': 'application/json',
@@ -28,27 +28,8 @@ class Dashboard extends Component {
     }).then(payload => payload.json())
       .then(result => {
         console.log("got reslt: " + JSON.stringify(result))
-
-        let sample = [{
-          "user_name": "bob",
-          "other_user_id": 0,
-          "day_of_week": 1,
-          "from_time": 480,
-          "to_time": 720,
-          "req_accepted": true,
-          "req_confirmed": true
-        }, {
-          "user_name": "jane",
-          "other_user_id": 1,
-          "day_of_week": 2,
-          "from_time": 860,
-          "to_time": 1060,
-          "req_accepted": true,
-          "req_confirmed": false
-        }]
-
         this.setState({
-          upcoming_meetings: sample.filter(req => req.req_confirmed && req.req_accepted)
+          upcoming_meetings: result.filter(req => req.req_accepted)
         })
       })
 
@@ -72,12 +53,12 @@ class Dashboard extends Component {
   getRequestTime = (req) => {
     let day_to_time = {0: "Monday", 1: "Tuesday", 2: "Wednesday", 3: "Thursday", 4: "Friday", 5: "Saturday", 6: "Sunday"}
     let convert_time = (minutes) => {
-      let n_hours = (minutes - 8*60) / 60
+      let n_hours = (Math.ceil(minutes / 10) * 10- 8*60) / 60
       return (n_hours + 7) % 12 + 1 + ":00"
     }
     let ampm = (minutes) => minutes >= 720 ? "pm" : "am"
 
-    return day_to_time[req.day_of_week] + "s, " + convert_time(req.from_time) + ampm(req.from_time) + " - " + convert_time(req.to_time) + ampm(req.to_time)
+    return req.date.split(" ")[0] + " " + convert_time(req.from_time) + ampm(req.from_time) + " - " + convert_time(req.to_time) + ampm(req.to_time)
   }
 
   render() {
@@ -116,7 +97,7 @@ class Dashboard extends Component {
             {
                 upcoming_meetings.map(req =>
                     <ListItem>
-                      <ListItemText primary={req.user_name} />
+                      <ListItemText primary={req.other_user_name} />
                       <ListItemText primary={this.getRequestTime(req)}/>
                     </ListItem>)
             }
